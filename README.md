@@ -8,7 +8,7 @@ ORM of nebula-java
 
 ## 设计理念
 
-详细见 graph-ocean 设计文档.docx：https://github.com/Anyzm/graph-ocean/blob/main/graph-ocean%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3.docx
+详细见 graph-ocean 设计文档：https://github.com/Anyzm/graph-ocean/blob/main/graph-ocean-design.md
 
 ## 使用示例
 
@@ -34,4 +34,4 @@ NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager
         QueryResult rows = nebulaGraphMapper.executeQuery(query);
 ```
 
-拥有丰富的 API，详情请见测试用例：com.github.anyzm.graph.ocean.GraphOceanExample]
+拥有丰富的 API，详情请见测试用例：com.github.anyzm.graph.ocean.GraphOceanExample
