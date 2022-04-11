@@ -22,9 +22,9 @@ Graph Ocean 又名：Nebula Java ORM。
 
 注解包括：
 
-* com.qihoo.finance.graph.annotation.GraphVertex：顶点 Tag
-* com.qihoo.finance.graph.annotation.GraphEdge：边类型
-* com.qihoo.finance.graph.annotation.GraphProperty：图属性
+* GraphVertex：顶点 Tag
+* GraphEdge：边类型
+* GraphProperty：图属性
 
 ![image3](https://user-images.githubusercontent.com/38887077/162661267-de834267-dfb5-407d-951b-621314f94621.png)
 
@@ -88,6 +88,6 @@ POJO 中的属性值和 Nebula 中的字段值不一定是一致的，所以需�
 
 ![image23](https://user-images.githubusercontent.com/38887077/162661328-5437fce8-dbfa-481d-ae36-b1a84788e994.png)
 
-结果返回封装类：`com.qihoo.finance.graph.domain.impl.QueryResult`。
+结果返回封装类：`QueryResult`。
 
 上面的设计完成之后，再辅助一些工具类和异常管理，整个 ORM 框架即呼之欲出。

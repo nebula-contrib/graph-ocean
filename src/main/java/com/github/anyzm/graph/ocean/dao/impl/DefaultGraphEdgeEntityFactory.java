@@ -17,6 +17,7 @@ import com.github.anyzm.graph.ocean.enums.GraphPropertyTypeEnum;
 import com.github.anyzm.graph.ocean.exception.CheckThrower;
 import com.github.anyzm.graph.ocean.exception.NebulaException;
 import com.google.common.collect.Maps;
+import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,29 +37,15 @@ public class DefaultGraphEdgeEntityFactory implements GraphEdgeEntityFactory {
         this.graphTypeManager = new DefaultGraphTypeManager();
     }
 
-    public DefaultGraphEdgeEntityFactory(GraphTypeManager graphTypeManager) {
+    public DefaultGraphEdgeEntityFactory(Field[] declaredFields, GraphTypeManager graphTypeManager) {
         this.graphTypeManager = graphTypeManager;
     }
 
-    @Override
-    public <S, T, E> GraphEdgeEntity<S, T, E> buildGraphEdgeEntity(E input) throws NebulaException {
-        if (input == null) {
-            return null;
-        }
-        Class<E> inputClass = (Class<E>) input.getClass();
-        GraphEdgeType<S, T, E> graphEdgeType = graphTypeManager.getGraphEdgeType(inputClass);
-        if (graphEdgeType == null) {
-            return null;
-        }
-        //起点类型
-        GraphVertexType<?> srcVertexType = graphEdgeType.getSrcVertexType();
-        //终点类型
-        GraphVertexType<?> dstVertexType = graphEdgeType.getDstVertexType();
-        Field[] declaredFields = inputClass.getDeclaredFields();
+    private <S, T, E> Pair<String, String> collectEdgeEntityProperties(E input, Field[] declaredFields,
+                                                                       GraphEdgeType<S, T, E> graphEdgeType,
+                                                                       Map<String, Object> propertyMap) {
         String srcId = null;
         String dstId = null;
-        //所有属性与值
-        Map<String, Object> propertyMap = Maps.newHashMapWithExpectedSize(declaredFields.length);
         for (Field declaredField : declaredFields) {
             declaredField.setAccessible(true);
             GraphProperty graphProperty = declaredField.getAnnotation(GraphProperty.class);
@@ -81,6 +68,39 @@ public class DefaultGraphEdgeEntityFactory implements GraphEdgeEntityFactory {
             if (value != null) {
                 propertyMap.put(graphProperty.value(), value);
             }
+        }
+        return new Pair<String, String>(srcId, dstId);
+    }
+
+    @Override
+    public <S, T, E> GraphEdgeEntity<S, T, E> buildGraphEdgeEntity(E input) throws NebulaException {
+        if (input == null) {
+            return null;
+        }
+        Class<E> inputClass = (Class<E>) input.getClass();
+        GraphEdgeType<S, T, E> graphEdgeType = graphTypeManager.getGraphEdgeType(inputClass);
+        if (graphEdgeType == null) {
+            return null;
+        }
+        //起点类型
+        GraphVertexType<?> srcVertexType = graphEdgeType.getSrcVertexType();
+        //终点类型
+        GraphVertexType<?> dstVertexType = graphEdgeType.getDstVertexType();
+        Field[] declaredFields = inputClass.getDeclaredFields();
+        String srcId = null;
+        String dstId = null;
+        //所有属性与值
+        Map<String, Object> propertyMap = Maps.newHashMapWithExpectedSize(declaredFields.length);
+        Pair<String, String> idPair = collectEdgeEntityProperties(input, declaredFields, graphEdgeType, propertyMap);
+        srcId = StringUtils.isNotBlank(idPair.getKey()) ? idPair.getKey() : srcId;
+        dstId = StringUtils.isNotBlank(idPair.getValue()) ? idPair.getValue() : dstId;
+        Class<? super E> superclass = inputClass.getSuperclass();
+        while (superclass != Object.class) {
+            declaredFields = superclass.getDeclaredFields();
+            idPair = collectEdgeEntityProperties(input, declaredFields, graphEdgeType, propertyMap);
+            srcId = StringUtils.isNotBlank(idPair.getKey()) ? idPair.getKey() : srcId;
+            dstId = StringUtils.isNotBlank(idPair.getValue()) ? idPair.getValue() : dstId;
+            superclass = superclass.getSuperclass();
         }
         CheckThrower.ifTrueThrow(StringUtils.isBlank(srcId) || StringUtils.isBlank(dstId),
                 ErrorEnum.INVALID_ID);

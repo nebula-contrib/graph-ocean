@@ -15,11 +15,11 @@ import com.github.anyzm.graph.ocean.enums.ErrorEnum;
 import com.github.anyzm.graph.ocean.enums.GraphPropertyTypeEnum;
 import com.github.anyzm.graph.ocean.exception.CheckThrower;
 import com.github.anyzm.graph.ocean.exception.NebulaException;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,19 +39,9 @@ public class DefaultGraphVertexEntityFactory implements GraphVertexEntityFactory
         this.graphTypeManager = new DefaultGraphTypeManager();
     }
 
-    @Override
-    public <T> GraphVertexEntity<T> buildGraphVertexEntity(T input) throws NebulaException {
-        if (input == null) {
-            return null;
-        }
-        Class<T> inputClass = (Class<T>) input.getClass();
-        GraphVertexType<T> graphVertexType = graphTypeManager.getGraphVertexType(inputClass);
-        if (graphVertexType == null) {
-            return null;
-        }
-        Field[] declaredFields = inputClass.getDeclaredFields();
+    private <T> String collectVertexEntityProperties(T input, Field[] declaredFields, GraphVertexType<T> graphVertexType,
+                                                     Map<String, Object> propertyMap) {
         String id = null;
-        Map<String, Object> propertyMap = new HashMap<>();
         for (Field declaredField : declaredFields) {
             declaredField.setAccessible(true);
             GraphProperty graphProperty = declaredField.getAnnotation(GraphProperty.class);
@@ -68,6 +58,31 @@ public class DefaultGraphVertexEntityFactory implements GraphVertexEntityFactory
             if (value != null) {
                 propertyMap.put(graphProperty.value(), value);
             }
+        }
+        return id;
+    }
+
+    @Override
+    public <T> GraphVertexEntity<T> buildGraphVertexEntity(T input) throws NebulaException {
+        if (input == null) {
+            return null;
+        }
+        Class<T> inputClass = (Class<T>) input.getClass();
+        GraphVertexType<T> graphVertexType = graphTypeManager.getGraphVertexType(inputClass);
+        if (graphVertexType == null) {
+            return null;
+        }
+        Field[] declaredFields = inputClass.getDeclaredFields();
+        String id = null;
+        Map<String, Object> propertyMap = Maps.newHashMapWithExpectedSize(declaredFields.length);
+        String tempId = collectVertexEntityProperties(input, declaredFields, graphVertexType, propertyMap);
+        id = StringUtils.isNotBlank(tempId) ? tempId : id;
+        Class<? super T> superclass = inputClass.getSuperclass();
+        while (superclass != Object.class) {
+            declaredFields = superclass.getDeclaredFields();
+            tempId = collectVertexEntityProperties(input, declaredFields, graphVertexType, propertyMap);
+            id = StringUtils.isNotBlank(tempId) ? tempId : id;
+            superclass = superclass.getSuperclass();
         }
         CheckThrower.ifTrueThrow(StringUtils.isBlank(id), ErrorEnum.INVALID_ID);
         return new GraphVertexEntity<>(graphVertexType, id, propertyMap);

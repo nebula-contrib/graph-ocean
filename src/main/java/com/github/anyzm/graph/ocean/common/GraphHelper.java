@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections.CollectionUtils;
+
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -202,6 +203,15 @@ public class GraphHelper {
         for (Field declaredField : declaredFields) {
             collectGraphField(graphLabelBuilder, declaredField, mustProps, propertyFieldMap, propertyFormatMap,
                     dataTypeMap, srcIdAsField, dstIdAsField);
+        }
+        Class superclass = clazz.getSuperclass();
+        while (superclass != Object.class) {
+            declaredFields = superclass.getDeclaredFields();
+            for (Field declaredField : declaredFields) {
+                collectGraphField(graphLabelBuilder, declaredField, mustProps, propertyFieldMap, propertyFormatMap,
+                        dataTypeMap, srcIdAsField, dstIdAsField);
+            }
+            superclass = superclass.getSuperclass();
         }
         graphLabelBuilder.labelClass(clazz);
         graphLabelBuilder.dataTypeMap(dataTypeMap);
