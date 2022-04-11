@@ -1,15 +1,17 @@
 # graph-ocean
-##框架描述
+## 框架描述
 ORM of nebula-java
 <br/>
-一个nebula-java的ORM框架，graph ocean 意为图海洋，
+一个 [nebula-java](https://github.com/vesoft-inc/nebula-java) 的 ORM 框架，graph ocean 意为图海洋，
 <br/>
-与nebula graph的星云相匹配，星辰大海。
+与 [Nebula Graph](https://github.com/vesoft-inc/nebula) 的星云相匹配，星辰大海。
 
-##设计理念
-详细见graph-ocean设计文档.docx
+## 设计理念
+
+详细见 graph-ocean 设计文档：https://github.com/Anyzm/graph-ocean/blob/main/graph-ocean-design.md
 
 ## 使用示例
+
 ```java
 NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager(
                 nebulaPool(nebulaPoolConfig())));
@@ -31,4 +33,5 @@ NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager
                 .yield("userName");
         QueryResult rows = nebulaGraphMapper.executeQuery(query);
 ```
-丰富的API，详情请见测试用例：com.github.anyzm.graph.ocean.GraphOceanExample
+
+拥有丰富的 API，详情请见测试用例：com.github.anyzm.graph.ocean.GraphOceanExample
