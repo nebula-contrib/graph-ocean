@@ -187,12 +187,17 @@ public class NebulaGraphMapper implements GraphMapper {
 
     @Override
     public int executeUpdateSql(String space, String sql) throws NebulaException, NotValidConnectionException {
+        NebulaSessionWrapper session = null;
         try {
-            NebulaSessionWrapper session = nebulaPoolSessionManager.getSession(space);
+            session = nebulaPoolSessionManager.getSession(space);
             return session.execute(sql);
         } catch (IOErrorException | AuthFailedException e) {
             log.error("执行sql异常,space={},sql={}", space, sql, e);
             throw new NebulaException(ErrorEnum.SYSTEM_ERROR);
+        } finally {
+            if (session != null) {
+                session.release();
+            }
         }
     }
 

@@ -37,7 +37,7 @@ public class DefaultGraphEdgeEntityFactory implements GraphEdgeEntityFactory {
         this.graphTypeManager = new DefaultGraphTypeManager();
     }
 
-    public DefaultGraphEdgeEntityFactory(Field[] declaredFields, GraphTypeManager graphTypeManager) {
+    public DefaultGraphEdgeEntityFactory(GraphTypeManager graphTypeManager) {
         this.graphTypeManager = graphTypeManager;
     }
 
