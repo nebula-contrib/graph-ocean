@@ -12,7 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.anyzm</groupId>
     <artifactId>graph-ocean</artifactId>
-    <version>1.0.0-release</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <nebula-java.version>2.0.0-rc1</nebula-java.version>
@@ -99,6 +99,19 @@
     </distributionManagement>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
