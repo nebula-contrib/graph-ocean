@@ -26,7 +26,7 @@ import java.util.Set;
  * 批量顶点更新引擎
  *
  * @author Anyzm
- * @date 2020/4/13
+ * date 2020/4/13
  */
 public class NebulaBatchVertexUpdate<T> implements VertexUpdateEngine {
 

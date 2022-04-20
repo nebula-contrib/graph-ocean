@@ -9,7 +9,7 @@ import io.github.anyzm.graph.ocean.common.ResponseService;
 
 /**
  * @author Anyzm
- * @date 2020/1/14
+ * date 2020/1/14
  */
 public enum ErrorEnum implements ResponseService {
     /**

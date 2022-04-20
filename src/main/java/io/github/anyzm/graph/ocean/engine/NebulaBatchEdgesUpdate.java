@@ -29,7 +29,7 @@ import java.util.Set;
  * 批量边更新引擎
  *
  * @author Anyzm
- * @date 2020/3/30
+ * date 2020/3/30
  */
 public class NebulaBatchEdgesUpdate<S, T, E> implements EdgeUpdateEngine<S, T, E> {
 

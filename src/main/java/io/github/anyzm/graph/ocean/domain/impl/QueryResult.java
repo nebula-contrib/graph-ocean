@@ -22,8 +22,8 @@ import java.util.stream.StreamSupport;
 /**
  * @author Anyzm
  * @version 1.0.0
- * @Description QueryResult is used for
- * @Date 2020/3/27 - 10:13
+ * description QueryResult is used for
+ * date 2020/3/27 - 10:13
  */
 @ToString
 public class QueryResult implements Iterable<QueryResult.Row>, Cloneable, Serializable {

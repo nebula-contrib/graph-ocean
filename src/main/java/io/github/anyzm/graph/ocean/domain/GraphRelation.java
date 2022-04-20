@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * @author Anyzm
- * @date 2020/5/1
+ * date 2020/5/1
  */
 public interface GraphRelation<S, T, E> {
     /**

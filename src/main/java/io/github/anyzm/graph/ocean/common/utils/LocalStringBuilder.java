@@ -15,7 +15,7 @@ import java.util.List;
  * 尽量不要用在字符串过大的场景
  *
  * @author Anyzm
- * @date 2021/4/28
+ * date 2021/4/28
  **/
 public class LocalStringBuilder {
 

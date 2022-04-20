@@ -10,8 +10,8 @@ import lombok.Getter;
 /**
  * @author Anyzm
  * @version 1.0.0
- * @Description CaseStatusEnum is used for
- * @Date 2020/1/14 - 15:06
+ * description CaseStatusEnum is used for
+ * date 2020/1/14 - 15:06
  */
 public enum GraphKeyPolicy {
 

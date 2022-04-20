@@ -7,8 +7,8 @@ package io.github.anyzm.graph.ocean.enums;
 
 /**
  * @author Anyzm
- * @Description:
- * @Date: Created in 20:58 2021/7/18
+ * description:
+ * date: Created in 20:58 2021/7/18
  */
 public enum GraphPropertyTypeEnum {
 

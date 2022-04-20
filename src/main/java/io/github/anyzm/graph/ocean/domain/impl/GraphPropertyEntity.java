@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * @author Anyzm
- * @date 2019/2/14
+ * date 2019/2/14
  */
 public abstract class GraphPropertyEntity implements CommonResultSet, Serializable, Cloneable {
     private final Map<String, Object> props;

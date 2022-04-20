@@ -10,8 +10,8 @@ import io.github.anyzm.graph.ocean.exception.NebulaException;
 
 /**
  * @author: Anyzm
- * @Description:
- * @Date: Created in 19:59 2021/7/18
+ * description:
+ * date: Created in 19:59 2021/7/18
  */
 public interface GraphVertexEntityFactory {
 

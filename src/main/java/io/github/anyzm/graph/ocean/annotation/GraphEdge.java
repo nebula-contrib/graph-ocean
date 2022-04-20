@@ -11,7 +11,7 @@ import java.lang.annotation.*;
  * 业务说明：标注边类型
  *
  * @author Anyzm
- * @date 2021/4/28
+ * date 2021/4/28
  **/
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
