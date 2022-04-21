@@ -14,10 +14,9 @@ package io.github.anyzm.graph.ocean.dao;
 public interface GraphValueFormatter {
 
     /**
-     * 格式化
      *
-     * @param oldValue
-     * @return
+     * @param oldValue 旧值
+     * @return 格式化对象
      */
     public Object format(Object oldValue);
 
@@ -25,8 +24,8 @@ public interface GraphValueFormatter {
     /**
      * nebula属性值反转为javaBean值
      *
-     * @param nebulaValue
-     * @return
+     * @param nebulaValue 数据库的值
+     * @return 反转的值
      */
     public default Object reformat(Object nebulaValue) {
         return nebulaValue;

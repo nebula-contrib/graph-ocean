@@ -20,10 +20,10 @@ public interface GraphVertexTypeFactory {
     /**
      * 根据类创建顶点类型
      *
-     * @param clazz
-     * @param <T>
-     * @return
-     * @throws NebulaException
+     * @param clazz 类类型
+     * @param <T> 顶点
+     * @return 顶点类型
+     * @throws NebulaException nebula异常
      */
     public <T> GraphVertexType<T> buildGraphVertexType(Class<T> clazz) throws NebulaException;
 

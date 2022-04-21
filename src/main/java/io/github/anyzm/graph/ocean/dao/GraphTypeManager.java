@@ -19,31 +19,27 @@ import io.github.anyzm.graph.ocean.exception.NebulaException;
  */
 public interface GraphTypeManager {
     /**
-     * 根据类类型获取顶点类型
      *
-     * @param clazz
-     * @param <T>
-     * @return
-     * @throws NebulaException
+     * @param clazz 类类型
+     * @param <T> 顶点
+     * @return 顶点类型
+     * @throws NebulaException 构造异常
      */
     public <T> GraphVertexType<T> getGraphVertexType(Class<T> clazz) throws NebulaException;
 
 
     /**
-     * 根据类类型获取顶点类型
      *
-     * @param clazz
-     * @return
-     * @throws NebulaException
+     * @param clazz 类类型
+     * @return 顶点类型
+     * @throws NebulaException 构造异常
      */
     public <S, T, E> GraphEdgeType<S, T, E> getGraphEdgeType(Class<E> clazz) throws NebulaException;
 
     /**
-     * 根据类对象获取图标签
-     *
-     * @param clazz
-     * @return
-     * @throws NebulaException
+     * @param clazz 类类型
+     * @return 图标签
+     * @throws NebulaException nebula异常
      */
     public GraphLabel getGraphLabel(Class clazz) throws NebulaException;
 

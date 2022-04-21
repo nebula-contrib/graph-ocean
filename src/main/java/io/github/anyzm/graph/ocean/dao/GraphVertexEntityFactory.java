@@ -18,9 +18,9 @@ public interface GraphVertexEntityFactory {
     /**
      * 构建GraphVertexEntity
      *
-     * @param input
-     * @return
-     * @throws NebulaException
+     * @param input 顶点对象
+     * @return 顶点实体
+     * @throws NebulaException nebula异常
      */
     public <T> GraphVertexEntity<T> buildGraphVertexEntity(T input) throws NebulaException;
 

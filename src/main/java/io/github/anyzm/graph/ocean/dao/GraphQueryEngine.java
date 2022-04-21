@@ -17,16 +17,14 @@ import io.github.anyzm.graph.ocean.domain.GraphLabel;
 public interface GraphQueryEngine extends GraphEngine {
 
     /**
-     * 是否包含多标签操作
      *
-     * @return
+     * @return 是否包含多标签操作
      */
     public boolean containsMultiLabel();
 
     /**
-     * 获取查询的图标签
      *
-     * @return
+     * @return 获取查询的图标签
      */
     public GraphLabel getGraphLabel();
 

@@ -25,10 +25,10 @@ public interface GraphMapper {
     /**
      * 批量保存顶点信息
      *
-     * @param entities
-     * @param <T>
-     * @return
-     * @throws NebulaException
+     * @param entities 顶点
+     * @param <T> 顶点类型
+     * @return 更新状态
+     * @throws NebulaException nebula异常
      */
     public <T> int saveVertexEntities(List<T> entities) throws NebulaException;
 
@@ -36,14 +36,14 @@ public interface GraphMapper {
     /**
      * 批量保存边信息和顶点信息
      *
-     * @param entities
-     * @param srcVertexEntityFunction
-     * @param dstVertexEntityFunction
-     * @param <S>
-     * @param <T>
-     * @param <E>
-     * @return
-     * @throws NebulaException
+     * @param entities 实体
+     * @param srcVertexEntityFunction 起点构造器
+     * @param dstVertexEntityFunction 终点构造器
+     * @param <S> 起点
+     * @param <T> 终点
+     * @param <E> 边
+     * @return 更新状态码
+     * @throws NebulaException nebula异常
      */
     public <S, T, E> int saveEdgeEntitiesWithVertex(List<E> entities, Function<String, S> srcVertexEntityFunction,
                                                     Function<String, T> dstVertexEntityFunction) throws NebulaException;
@@ -52,9 +52,9 @@ public interface GraphMapper {
     /**
      * 批量保存边信息
      *
-     * @param entities
-     * @return
-     * @throws NebulaException
+     * @param entities 边
+     * @return 更新状态码
+     * @throws NebulaException nebula异常
      */
     public <S, T, E> int saveEdgeEntities(List<E> entities) throws NebulaException;
 
@@ -62,11 +62,11 @@ public interface GraphMapper {
     /**
      * 批量执行更新语句
      *
-     * @param space
-     * @param sqlList
-     * @return
-     * @throws NebulaException
-     * @throws NotValidConnectionException
+     * @param space 图空间
+     * @param sqlList sql列表
+     * @return 更新状态码
+     * @throws NebulaException nebula异常
+     * @throws NotValidConnectionException 连接异常
      */
     public int executeBatchUpdateSql(String space, List<String> sqlList) throws NebulaException, NotValidConnectionException;
 
@@ -74,11 +74,11 @@ public interface GraphMapper {
     /**
      * 执行更新sql
      *
-     * @param space
-     * @param sql
-     * @return
-     * @throws NebulaException
-     * @throws NotValidConnectionException
+     * @param space 图空间
+     * @param sql sql
+     * @return 更新状态码
+     * @throws NebulaException nebula异常
+     * @throws NotValidConnectionException 连接异常
      */
     public int executeUpdateSql(String space, String sql) throws NebulaException, NotValidConnectionException;
 
@@ -86,19 +86,19 @@ public interface GraphMapper {
     /**
      * 执行更新sql
      *
-     * @param sql
-     * @return
-     * @throws NebulaException
-     * @throws NotValidConnectionException
+     * @param sql sql
+     * @return 更新状态码
+     * @throws NebulaException nebula异常
+     * @throws NotValidConnectionException 连接异常
      */
     public int executeUpdateSql(String sql) throws NebulaException, NotValidConnectionException;
 
     /**
      * 执行查询
      *
-     * @param sql
-     * @return
-     * @throws NebulaException
+     * @param sql sql
+     * @return 查询结果
+     * @throws NebulaException nebula异常
      */
     public QueryResult executeQuerySql(String sql) throws NebulaException;
 
@@ -106,10 +106,10 @@ public interface GraphMapper {
     /**
      * 执行查询
      *
-     * @param space
-     * @param sql
-     * @return
-     * @throws NebulaException
+     * @param space 图空间
+     * @param sql sql
+     * @return 查询结果
+     * @throws NebulaException nebula异常
      */
     public QueryResult executeQuerySql(String space, String sql) throws NebulaException;
 
@@ -117,11 +117,11 @@ public interface GraphMapper {
     /**
      * 执行查询
      *
-     * @param sql
-     * @param clazz
-     * @param <T>
-     * @return
-     * @throws NebulaException
+     * @param sql ngql
+     * @param clazz 类类型
+     * @param <T> 实体
+     * @return 查询的实体列表
+     * @throws NebulaException nebula异常
      */
     public <T> List<T> executeQuerySql(String sql, Class<T> clazz) throws NebulaException;
 
@@ -129,9 +129,9 @@ public interface GraphMapper {
     /**
      * 执行查询
      *
-     * @param query
-     * @return
-     * @throws NebulaException
+     * @param query 查询api
+     * @return 查询结果
+     * @throws NebulaException nebula异常
      */
     public QueryResult executeQuery(GraphQuery query) throws NebulaException;
 
@@ -139,10 +139,10 @@ public interface GraphMapper {
     /**
      * 指定空间执行查询
      *
-     * @param space
-     * @param query
-     * @return
-     * @throws NebulaException
+     * @param space 图空间
+     * @param query 查询API
+     * @return 查询结果
+     * @throws NebulaException nebula异常
      */
     public QueryResult executeQuery(String space, GraphQuery query) throws NebulaException;
 
@@ -150,11 +150,11 @@ public interface GraphMapper {
     /**
      * 执行查询
      *
-     * @param query
-     * @param clazz
-     * @param <T>
-     * @return
-     * @throws NebulaException
+     * @param query 查询API
+     * @param clazz 类类型
+     * @param <T> 顶点
+     * @return 实体列表
+     * @throws NebulaException nebula异常
      */
     public <T> List<T> executeQuery(GraphQuery query, Class<T> clazz) throws NebulaException;
 
@@ -162,28 +162,28 @@ public interface GraphMapper {
     /**
      * 查询边
      *
-     * @param edgeClazz
-     * @param vertexIds
-     * @return
+     * @param edgeClazz 边类类型
+     * @param vertexIds 顶点id
+     * @return 出边列表
      */
     public <T> List<T> goOutEdge(Class<T> edgeClazz, String... vertexIds);
 
     /**
      * 查询反向边
      *
-     * @param edgeClazz
-     * @param vertexIds
-     * @param <T>
-     * @return
+     * @param edgeClazz 边类类型
+     * @param vertexIds 顶点id
+     * @param <T> 入边类型
+     * @return 入边列表
      */
     public <T> List<T> goReverseEdge(Class<T> edgeClazz, String... vertexIds);
 
     /**
      * 查询tag
      *
-     * @param vertexClazz
-     * @param vertexIds
-     * @return
+     * @param vertexClazz 顶点类型
+     * @param vertexIds 顶点id
+     * @return 顶点列表
      */
     public <T> List<T> fetchVertexTag(Class<T> vertexClazz, String... vertexIds);
 
