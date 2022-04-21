@@ -21,12 +21,11 @@ import java.util.List;
 public interface GraphUpdateVertexEngineFactory {
 
     /**
-     * 构造图顶点更新引擎
      *
-     * @param graphVertexEntities
-     * @param <T>
-     * @return
-     * @throws NebulaException
+     * @param graphVertexEntities 顶点实体
+     * @param <T> 顶点
+     * @return 顶点更新引擎
+     * @throws NebulaException nebula异常
      */
     public <T> VertexUpdateEngine build(List<GraphVertexEntity<T>> graphVertexEntities) throws NebulaException;
 

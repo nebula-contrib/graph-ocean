@@ -22,13 +22,13 @@ import java.util.List;
 public interface GraphUpdateEdgeEngineFactory {
 
     /**
-     * 构造图边更新引擎
      *
-     * @param graphEdgeEntities
-     * @param <S>
-     * @param <E>
-     * @return
-     * @throws NebulaException
+     * @param graphEdgeEntities 边实体
+     * @param <S> 起点
+     * @param <T> 终点
+     * @param <E> 边
+     * @return 边更新引擎
+     * @throws NebulaException nebula异常
      */
     public <S, T, E> EdgeUpdateEngine<S, T, E> build(List<GraphEdgeEntity<S, T, E>> graphEdgeEntities) throws NebulaException;
 
@@ -36,13 +36,14 @@ public interface GraphUpdateEdgeEngineFactory {
     /**
      * 构造图边更新引擎
      *
-     * @param graphEdgeEntities
-     * @param srcGraphVertexEntities
-     * @param dstGraphVertexEntities
-     * @param <S>
-     * @param <E>
-     * @return
-     * @throws NebulaException
+     * @param graphEdgeEntities 边实体
+     * @param srcGraphVertexEntities 起点实体
+     * @param dstGraphVertexEntities 终点实体
+     * @param <S> 起点
+     * @param <T> 终点
+     * @param <E> 边
+     * @return 边更新引擎
+     * @throws NebulaException nebula异常
      */
     public <S, T, E> EdgeUpdateEngine<S, T, E> build(List<GraphEdgeEntity<S, T, E>> graphEdgeEntities,
                                                      List<GraphVertexEntity<S>> srcGraphVertexEntities,

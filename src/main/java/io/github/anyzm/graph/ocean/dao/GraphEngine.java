@@ -19,9 +19,8 @@ import java.util.List;
 public interface GraphEngine extends BatchSql {
 
     /**
-     * 获取操作标签(TAG || 关系(边))
      *
-     * @return
+     * @return 获取操作标签(TAG || 关系(边))
      */
     public List<GraphLabel> getLabels();
 

@@ -15,16 +15,14 @@ package io.github.anyzm.graph.ocean.common;
  */
 public interface ResponseService {
     /**
-     * 获取返回码
      *
-     * @return
+     * @return 返回码
      */
     public String getResponseCode();
 
     /**
-     * 获取返回信息
      *
-     * @return
+     * @return 返回信息
      */
     public String getResponseMessage();
 }

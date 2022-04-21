@@ -21,16 +21,14 @@ import java.util.List;
 public interface EdgeUpdateEngine<S, T, E> extends GraphUpdateEngine {
 
     /**
-     * 获取边实体
      *
-     * @return
+     * @return 获取边实体
      */
     public List<GraphEdgeEntity<S, T, E>> getGraphEdgeEntityList();
 
     /**
-     * 获取边类型
      *
-     * @return
+     * @return 获取边类型
      */
     public GraphEdgeType<S, T, E> getGraphEdgeType();
 

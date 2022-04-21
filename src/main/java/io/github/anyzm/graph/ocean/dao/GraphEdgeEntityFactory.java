@@ -16,14 +16,13 @@ import io.github.anyzm.graph.ocean.exception.NebulaException;
 public interface GraphEdgeEntityFactory {
 
     /**
-     * 构建GraphEdgeEntity
      *
-     * @param input
-     * @param <S>
-     * @param <T>
-     * @param <E>
-     * @return
-     * @throws NebulaException
+     * @param input 边对象
+     * @param <S> 起点
+     * @param <T> 终点
+     * @param <E> 边
+     * @return GraphEdgeEntity
+     * @throws NebulaException nebula异常
      */
     public <S, T, E> GraphEdgeEntity<S, T, E> buildGraphEdgeEntity(E input) throws NebulaException;
 

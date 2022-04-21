@@ -22,9 +22,9 @@ public interface NebulaSession extends Session {
     /**
      * 执行查询
      *
-     * @param statement
-     * @return
-     * @throws NebulaExecuteException
+     * @param statement 语句
+     * @return 查询结果
+     * @throws NebulaExecuteException nebula执行异常
      */
     public ResultSet executeQuery(String statement) throws NebulaExecuteException;
 

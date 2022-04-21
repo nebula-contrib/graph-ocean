@@ -19,37 +19,32 @@ import java.lang.annotation.*;
 public @interface GraphEdge {
 
     /**
-     * 边名称
      *
-     * @return
+     * @return 边名称
      */
     String value();
 
     /**
-     * 边起点类
      *
-     * @return
+     * @return 边起点类
      */
     Class srcVertex();
 
     /**
-     * 边终点类
      *
-     * @return
+     * @return 边终点类
      */
     Class dstVertex();
 
     /**
-     * 起点id是否作为字段
      *
-     * @return
+     * @return 起点id是否作为字段
      */
     boolean srcIdAsField() default true;
 
     /**
-     * 末尾id是否作为字段
      *
-     * @return
+     * @return 末尾id是否作为字段
      */
     boolean dstIdAsField() default true;
 

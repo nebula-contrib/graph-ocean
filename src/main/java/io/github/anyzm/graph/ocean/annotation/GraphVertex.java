@@ -22,23 +22,20 @@ import java.lang.annotation.*;
 public @interface GraphVertex {
 
     /**
-     * 顶点名称
      *
-     * @return
+     * @return 顶点名称
      */
     String value();
 
     /**
-     * 主键生成方法
      *
-     * @return
+     * @return 主键生成方法
      */
     GraphKeyPolicy keyPolicy();
 
     /**
-     * 顶点id是否作为属性
      *
-     * @return
+     * @return 顶点id是否作为属性
      */
     boolean idAsField() default true;
 

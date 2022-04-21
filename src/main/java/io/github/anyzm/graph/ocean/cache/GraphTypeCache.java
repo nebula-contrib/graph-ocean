@@ -20,38 +20,34 @@ import io.github.anyzm.graph.ocean.domain.impl.GraphVertexType;
 public interface GraphTypeCache {
 
     /**
-     * 根据类类型获取顶点类型
      *
-     * @param clazz
-     * @param <T>
-     * @return
+     * @param clazz 类类型
+     * @param <T> 顶点
+     * @return 顶点类型
      */
     public <T> GraphVertexType<T> getGraphVertexType(Class<T> clazz);
 
 
     /**
-     * 保存图顶点type缓存
      *
-     * @param clazz
-     * @param graphVertexType
-     * @param <T>
+     * @param clazz 类类型
+     * @param graphVertexType 顶点type
+     * @param <T> 顶点
      */
     public <T> void putGraphVertexType(Class<T> clazz, GraphVertexType<T> graphVertexType);
 
 
     /**
-     * 根据类类型获取顶点类型
      *
-     * @param clazz
-     * @return
+     * @param clazz 类类型
+     * @return 顶点类型
      */
     public GraphEdgeType getGraphEdgeType(Class clazz);
 
     /**
-     * 保存图边类型的缓存
      *
-     * @param clazz
-     * @param graphEdgeType
+     * @param clazz 类类型
+     * @param graphEdgeType 边类型
      */
     public void putGraphEdgeType(Class clazz, GraphEdgeType graphEdgeType);
 

@@ -22,77 +22,77 @@ public interface GraphLabel {
     /**
      * 是否Tag
      *
-     * @return
+     * @return 是否顶点tag
      */
     public boolean isTag();
 
     /**
      * 是否关系(边)
      *
-     * @return
+     * @return 是否边
      */
     public boolean isEdge();
 
     /**
      * 获取标签名称
      *
-     * @return
+     * @return 标签名
      */
     public String getName();
 
     /**
      * 获取必要字段
      *
-     * @return
+     * @return 必须字段
      */
     public List<String> getMustFields();
 
     /**
      * 获取所有字段
      *
-     * @return
+     * @return 所有字段名
      */
     public Collection<String> getAllFields();
 
     /**
      * 格式化属性值
      *
-     * @param field
-     * @param originalValue
-     * @return
+     * @param field 字段
+     * @param originalValue 原始值
+     * @return 格式化后的值
      */
     public Object formatValue(String field, Object originalValue);
 
     /**
      * 反转格式化属性值
      *
-     * @param field
-     * @param databaseValue
-     * @return
+     * @param field 字段
+     * @param databaseValue 数据库的值
+     * @return 反格式化后的值
      */
     public Object reformatValue(String field, Object databaseValue);
 
     /**
      * 获取字段名
      *
-     * @param property
-     * @return
+     * @param property 属性
+     * @return 字段名
      */
     public String getFieldName(String property);
 
     /**
      * 获取属性名
      *
-     * @param field
-     * @return
+     * @param field  字段
+     * @return 属性名
      */
     public String getPropertyName(String field);
 
     /**
      * 获取字段的数据类型
      *
-     * @param field
-     * @return
+     * @param field 字段
+     * @return 数据类型
      */
     public GraphDataTypeEnum getFieldDataType(String field);
 

@@ -19,23 +19,21 @@ import io.github.anyzm.graph.ocean.exception.NebulaException;
 public interface GraphEdgeTypeFactory {
 
     /**
-     * 根据类创建边类型
      *
-     * @param clazz
-     * @return
-     * @throws NebulaException
+     * @param clazz 类类型
+     * @return 边类型
+     * @throws NebulaException 执行异常
      */
     public <S, T, E> GraphEdgeType<S, T, E> buildGraphEdgeType(Class<E> clazz) throws NebulaException;
 
 
     /**
-     * 根据类 和 顶点类型创建边类型
      *
-     * @param clazz
-     * @param srcGraphVertexType
-     * @param dstGraphVertexType
-     * @return
-     * @throws NebulaException
+     * @param clazz  类类型
+     * @param srcGraphVertexType 起点类型type
+     * @param dstGraphVertexType 终点类型type
+     * @return  边类型
+     * @throws NebulaException 构建异常
      */
     public <S, T, E> GraphEdgeType<S, T, E> buildGraphEdgeType(Class<E> clazz, GraphVertexType<S> srcGraphVertexType,
                                                                GraphVertexType<T> dstGraphVertexType) throws NebulaException;

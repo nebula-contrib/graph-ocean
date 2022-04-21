@@ -25,72 +25,72 @@ public interface GraphLabelBuilder {
     /**
      * 构造元素名
      *
-     * @param graphLabelName
-     * @return
+     * @param graphLabelName 标签名
+     * @return 标签构造器
      */
     public GraphLabelBuilder graphLabelName(String graphLabelName);
 
     /**
      * 构造元素对应的类
      *
-     * @param labelClass
-     * @return
+     * @param labelClass 标签类类型
+     * @return 标签构造器
      */
     public GraphLabelBuilder labelClass(Class labelClass);
 
     /**
      * 构造属性格式化map
      *
-     * @param propertyFormatMap
-     * @return
+     * @param propertyFormatMap 属性格式化map
+     * @return 标签构造器
      */
     public GraphLabelBuilder propertyFormatMap(Map<String, GraphValueFormatter> propertyFormatMap);
 
     /**
      * 构造数据类型map
      *
-     * @param dataTypeMap
-     * @return
+     * @param dataTypeMap 字段类型map
+     * @return 标签构造器
      */
     public GraphLabelBuilder dataTypeMap(Map<String, GraphDataTypeEnum> dataTypeMap);
 
     /**
      * 构造必要属性
      *
-     * @param mustProps
-     * @return
+     * @param mustProps 必须属性
+     * @return 标签构造器
      */
     public GraphLabelBuilder mustProps(List<String> mustProps);
 
     /**
      * 构造属性字段map
      *
-     * @param propertyFieldMap
-     * @return
+     * @param propertyFieldMap 属性字段map
+     * @return 标签构造器
      */
     public GraphLabelBuilder propertyFieldMap(Map<String, String> propertyFieldMap);
 
     /**
      * 构造主键策略
      *
-     * @param graphKeyPolicy
-     * @return
+     * @param graphKeyPolicy 逐渐策略
+     * @return 标签构造器
      */
     public GraphLabelBuilder graphKeyPolicy(GraphKeyPolicy graphKeyPolicy);
 
     /**
      * 构造id是否作为字段
      *
-     * @param idAsField
-     * @return
+     * @param idAsField id是否作为字段
+     * @return 标签构造器
      */
     public GraphLabelBuilder idAsField(boolean idAsField);
 
     /**
      * 构造id值格式转化器
      *
-     * @param idValueFormatter
-     * @return
+     * @param idValueFormatter 主键格式转化器
+     * @return 标签构造器
      */
     public GraphLabelBuilder idValueFormatter(GraphValueFormatter idValueFormatter);
 
@@ -98,55 +98,55 @@ public interface GraphLabelBuilder {
     /**
      * 构造起点id是否作为字段
      *
-     * @param srcIdAsField
-     * @return
+     * @param srcIdAsField 起点id是否作为字段
+     * @return 标签构造器
      */
     public GraphLabelBuilder srcIdAsField(boolean srcIdAsField);
 
     /**
      * 构造目标id是否作为字段
      *
-     * @param dstIdAsField
-     * @return
+     * @param dstIdAsField 终点id是否作为字段
+     * @return 标签构造器
      */
     public GraphLabelBuilder dstIdAsField(boolean dstIdAsField);
 
     /**
      * 构造起点id值格式转化器
      *
-     * @param srcIdValueFormatter
-     * @return
+     * @param srcIdValueFormatter 起点id格式化器
+     * @return 标签构造器
      */
     public GraphLabelBuilder srcIdValueFormatter(GraphValueFormatter srcIdValueFormatter);
 
     /**
      * 构造目标id值格式转化器
      *
-     * @param dstIdValueFormatter
-     * @return
+     * @param dstIdValueFormatter 终点id格式化器
+     * @return 标签构造器
      */
     public GraphLabelBuilder dstIdValueFormatter(GraphValueFormatter dstIdValueFormatter);
 
     /**
      * 构造起点顶点类型
      *
-     * @param srcGraphVertexType
-     * @return
+     * @param srcGraphVertexType 起点顶点类型
+     * @return 标签构造器
      */
     public GraphLabelBuilder srcGraphVertexType(GraphVertexType srcGraphVertexType);
 
     /**
      * 构造目标顶点类型
      *
-     * @param dstGraphVertexType
-     * @return
+     * @param dstGraphVertexType 终点顶点类型
+     * @return 标签构造器
      */
     public GraphLabelBuilder dstGraphVertexType(GraphVertexType dstGraphVertexType);
 
     /**
      * 构造出真实的元素
      *
-     * @return
+     * @return 标签
      */
     public GraphLabel build();
 

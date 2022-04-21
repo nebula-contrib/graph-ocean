@@ -12,10 +12,9 @@ import java.util.List;
 
 public interface BatchSql {
     /**
-     * 获取批量执行的 sql 列表
      *
-     * @return
-     * @throws NebulaException
+     * @return 获取批量执行的 sql 列表
+     * @throws NebulaException nebula异常
      */
     public List<String> getSqlList() throws NebulaException;
 }
