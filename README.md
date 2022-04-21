@@ -11,6 +11,14 @@ ORM of nebula-java
 详细见 graph-ocean 设计文档：https://github.com/Anyzm/graph-ocean/blob/main/graph-ocean-design.md
 
 ## 使用示例
+maven项目引入坐标：
+```java
+<dependency>
+  <groupId>io.github.anyzm</groupId>
+  <artifactId>graph-ocean</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
 
 ```java
 NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager(
