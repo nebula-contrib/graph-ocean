@@ -43,3 +43,11 @@ NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager
 ```
 
 拥有丰富的 API，详情请见测试用例：com.github.anyzm.graph.ocean.GraphOceanExample
+
+
+## 写在最后
+由于本框架目前几乎是由一人开发完成，所以难免有些不完善或者不优雅的地方，望大家谅解。
+<br/>
+初期最佳实践是可以下载源码自己在本地根绝自己的需要修改，同时也希望能有更多的人能够参与其中一起开发完善这个框架。
+
+
