@@ -195,9 +195,10 @@ public class NebulaPoolInit {
 @GraphEdge(value = "e_address_book", srcVertex = VertexEntity.class, dstVertex = VertexEntity.class)
 @Setter
 @Getter
-@GraphProperty(value = "user_no1", required = true, propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_SRC_ID)
 public class EAddressBookEntity {
+    @GraphProperty(value = "user_no1", required = true, propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_SRC_ID)
     private String userNo1;
+  
     @GraphProperty(value = "user_no2", required = true, propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_DST_ID)
     private String userNo2;
     /**
