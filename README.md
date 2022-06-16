@@ -24,7 +24,7 @@ maven项目引入坐标：
 另外如果nebula-java客户端的连接池API没有改动的话，也可以在pom中剔除nebula-java，然后引入自己需要的客户端版本。
 
 ```java
-NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager(
+        NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager(
                 nebulaPool(nebulaPoolConfig())));
         User user = new User("UR123", "张三");
         //保存顶点
@@ -40,9 +40,10 @@ NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager
         //查询反向边
         List<Follow> fans = nebulaGraphMapper.goReverseEdge(Follow.class, "UR123");
         //查询API
-        VertexQuery query = NebulaVertexQuery.build().fetchPropOn(User.class, "UR123")
-                .yield("userName");
-        QueryResult rows = nebulaGraphMapper.executeQuery(query);
+        VertexQuery queryUserName = NebulaVertexQuery.build().fetchPropOn(User.class, "UR123")
+                .yield(User.class,"userName");
+        QueryResult rows = nebulaGraphMapper.executeQuery(queryUserName);
+        System.out.println(rows);
 ```
 
 拥有丰富的 API，详情请见测试用例：com.github.anyzm.graph.ocean.GraphOceanExample

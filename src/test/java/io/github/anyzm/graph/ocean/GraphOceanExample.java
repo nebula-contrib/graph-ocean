@@ -1,5 +1,9 @@
 package io.github.anyzm.graph.ocean;
 
+import com.google.common.collect.Lists;
+import com.vesoft.nebula.client.graph.NebulaPoolConfig;
+import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.net.NebulaPool;
 import io.github.anyzm.graph.ocean.annotation.GraphEdge;
 import io.github.anyzm.graph.ocean.annotation.GraphProperty;
 import io.github.anyzm.graph.ocean.annotation.GraphVertex;
@@ -11,10 +15,7 @@ import io.github.anyzm.graph.ocean.enums.GraphKeyPolicy;
 import io.github.anyzm.graph.ocean.enums.GraphPropertyTypeEnum;
 import io.github.anyzm.graph.ocean.mapper.NebulaGraphMapper;
 import io.github.anyzm.graph.ocean.session.NebulaPoolSessionManager;
-import com.google.common.collect.Lists;
-import com.vesoft.nebula.client.graph.NebulaPoolConfig;
-import com.vesoft.nebula.client.graph.data.HostAddress;
-import com.vesoft.nebula.client.graph.net.NebulaPool;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.UnknownHostException;
@@ -34,7 +35,7 @@ public class GraphOceanExample {
 
     private static int nebulaPoolTimeout = 300000;
 
-    private static String nebulaCluster = "127.0.0.1:5569";
+    private static String nebulaCluster = "10.220.193.183:9669";
 
     private static String userName = "root";
 
@@ -97,12 +98,14 @@ public class GraphOceanExample {
         //查询反向边
         List<Follow> fans = nebulaGraphMapper.goReverseEdge(Follow.class, "UR123");
         //查询API
-        VertexQuery query = NebulaVertexQuery.build().fetchPropOn(User.class, "UR123")
-                .yield("userName");
-        QueryResult rows = nebulaGraphMapper.executeQuery(query);
+        VertexQuery queryUserName = NebulaVertexQuery.build().fetchPropOn(User.class, "UR123")
+                .yield(User.class,"userName");
+        QueryResult rows = nebulaGraphMapper.executeQuery(queryUserName);
+        System.out.println(rows);
     }
 
     @GraphVertex(value = "user", keyPolicy = GraphKeyPolicy.string_key)
+    @Data
     public static class User {
         @GraphProperty(value = "user_no", required = true,
                 propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_VERTEX_ID)
@@ -119,7 +122,8 @@ public class GraphOceanExample {
         }
     }
 
-    @GraphEdge(value = "user", srcVertex = User.class, dstVertex = User.class)
+    @GraphEdge(value = "follow", srcVertex = User.class, dstVertex = User.class)
+    @Data
     public static class Follow {
         @GraphProperty(value = "user_no1", required = true,
                 propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_SRC_ID)
