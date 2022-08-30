@@ -37,11 +37,8 @@ public class NebulaPoolSessionManager {
         this.reconnect = reconnect;
     }
 
-    public NebulaSessionWrapper getSession(String space) throws NotValidConnectionException, IOErrorException, AuthFailedException, NebulaException {
+    public NebulaSessionWrapper getSession() throws NotValidConnectionException, IOErrorException, AuthFailedException, NebulaException {
         NebulaSessionWrapper nebulaSessionWrapper = new NebulaSessionWrapper(this.nebulaPool.getSession(this.userName, this.password, this.reconnect));
-        if (StringUtils.isNotBlank(space)) {
-            nebulaSessionWrapper.execute("use " + space);
-        }
         return nebulaSessionWrapper;
     }
 

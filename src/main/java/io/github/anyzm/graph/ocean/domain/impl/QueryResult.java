@@ -24,12 +24,14 @@ import java.util.stream.StreamSupport;
  * @version 1.0.0
  * description QueryResult is used for
  * date 2020/3/27 - 10:13
+ * @update chenrui
+ * @date 2020/08/30
  */
 @ToString
 public class QueryResult implements Iterable<QueryResult.Row>, Cloneable, Serializable {
 
     @Getter
-    private List<Row> data = Collections.emptyList();
+    private List<Row> data = new ArrayList<>();
 
     public QueryResult() {
     }
