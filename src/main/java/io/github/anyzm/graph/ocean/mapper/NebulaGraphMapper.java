@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Description  NebulaGraphMapper is used for
@@ -43,6 +44,10 @@ import java.util.function.Function;
  */
 @Slf4j
 public class NebulaGraphMapper implements GraphMapper {
+
+    private static final int BATCH_SIZE = 500;
+
+    private static final String SQL = "execute %s ; %s;";
 
     @Setter
     @Getter
@@ -167,30 +172,32 @@ public class NebulaGraphMapper implements GraphMapper {
 
     @Override
     public int executeBatchUpdateSql(String space, List<String> sqlList) throws NebulaException {
-        NebulaSessionWrapper session = null;
-        try {
-            session = nebulaPoolSessionManager.getSession(space);
-            for (String sql : sqlList) {
-                int execute = session.execute(sql);
+        for(int i=0;i<sqlList.size();i+=BATCH_SIZE) {
+            List<String> sqls = sqlList.subList(i, Math.min(sqlList.size(), i + BATCH_SIZE));
+            String sql = sqls.stream().collect(Collectors.joining(";"));
+            NebulaSessionWrapper session = null;
+            try {
+                session = nebulaPoolSessionManager.getSession();
+                int execute = session.execute(String.format(SQL,space,sql));
                 CheckThrower.ifTrueThrow(execute != 0, ErrorEnum.UPDATE_NEBULA_EROR);
-            }
-            return 0;
-        } catch (IOErrorException | NotValidConnectionException | AuthFailedException e) {
-            log.error("批量执行sql异常,space={},sqlList={}", space, sqlList, e);
-            throw new NebulaException(ErrorEnum.SYSTEM_ERROR);
-        } finally {
-            if (session != null) {
-                session.release();
+            } catch (IOErrorException | NotValidConnectionException | AuthFailedException e) {
+                log.error("批量执行sql异常,space={},sqlList={}", space, sqlList, e);
+                throw new NebulaException(ErrorEnum.SYSTEM_ERROR);
+            } finally {
+                if (session != null) {
+                    session.release();
+                }
             }
         }
+        return 0;
     }
 
     @Override
     public int executeUpdateSql(String space, String sql) throws NebulaException, NotValidConnectionException {
         NebulaSessionWrapper session = null;
         try {
-            session = nebulaPoolSessionManager.getSession(space);
-            return session.execute(sql);
+            session = nebulaPoolSessionManager.getSession();
+            return session.execute(String.format(SQL,space,sql));
         } catch (IOErrorException | AuthFailedException e) {
             log.error("执行sql异常,space={},sql={}", space, sql, e);
             throw new NebulaException(ErrorEnum.SYSTEM_ERROR);
@@ -215,8 +222,8 @@ public class NebulaGraphMapper implements GraphMapper {
     public QueryResult executeQuerySql(String space, String sql) throws NebulaException {
         NebulaSessionWrapper session = null;
         try {
-            session = nebulaPoolSessionManager.getSession(space);
-            return session.executeQueryDefined(sql);
+            session = nebulaPoolSessionManager.getSession();
+            return session.executeQueryDefined(String.format(SQL,space,sql));
         } catch (IOErrorException | NotValidConnectionException | AuthFailedException e) {
             log.error("执行sql异常,space={},sql={}", space, sql, e);
             throw new NebulaException(ErrorEnum.SYSTEM_ERROR);
