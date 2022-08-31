@@ -11,18 +11,12 @@ import io.github.anyzm.graph.ocean.exception.CheckThrower;
 import io.github.anyzm.graph.ocean.exception.NebulaException;
 import io.github.anyzm.graph.ocean.exception.NebulaExecuteException;
 import io.github.anyzm.graph.ocean.exception.NebulaVersionConflictException;
-import com.google.common.collect.Maps;
-import com.vesoft.nebula.Row;
-import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.graph.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Description  NebulaSessionWrapper is used for
@@ -88,36 +82,11 @@ public class NebulaSessionWrapper implements NebulaSession {
     @Override
     public QueryResult executeQueryDefined(String statement) throws NebulaExecuteException {
         ResultSet resultSet = executeQuery(statement);
-        QueryResult queryResult = new QueryResult();
-        List<String> columns = resultSet.getColumnNames();
-        if (CollectionUtils.isEmpty(columns)) {
-            return queryResult;
+        if (!resultSet.isSucceeded()) {
+            log.warn("executeQueryDefined execute fail,sql:"+statement);
+            return new QueryResult();
         }
-        List<QueryResult.Row> data = new ArrayList<>();
-        List<Row> rows = resultSet.getRows();
-        if (CollectionUtils.isEmpty(rows)) {
-            return new QueryResult(data);
-        }
-        for (Row rowValue : rows) {
-            // 设置为 columns.size() 优化内存使用
-            Map<String, Object> rowMap = Maps.newHashMapWithExpectedSize(columns.size());
-            List<Value> columnsValues = rowValue.getValues();
-            if (!CollectionUtils.isEmpty(columnsValues)) {
-                int size = columnsValues.size();
-                for (int i = 0; i < size; i++) {
-                    Value columnValue = columnsValues.get(i);
-                    Object fieldValue = columnValue.getFieldValue();
-                    int setField = columnValue.getSetField();
-                    if (setField == Value.SVAL) {
-                        fieldValue = fieldValue == null ? null : new String((byte[]) fieldValue);
-                    }
-                    // 利用 intern 将重复的列名作成享元模式
-                    rowMap.put(columns.get(i).intern(), fieldValue);
-                }
-            }
-            data.add(new QueryResult.Row(rowMap));
-        }
-        return new QueryResult(data);
+        return new QueryResult(IntStream.range(0,resultSet.rowsSize()).mapToObj(i->resultSet.rowValues(i)).collect(Collectors.toList()));
     }
 
     @Override

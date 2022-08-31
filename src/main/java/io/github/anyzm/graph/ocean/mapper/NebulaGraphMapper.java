@@ -236,17 +236,8 @@ public class NebulaGraphMapper implements GraphMapper {
 
     @Override
     public <T> List<T> executeQuerySql(String sql, Class<T> clazz) throws NebulaException {
-        QueryResult rows = executeQuerySql(sql);
-        GraphLabel graphLabel = graphTypeManager.getGraphLabel(clazz);
-        for (QueryResult.Row row : rows) {
-            for (Map.Entry<String, Object> entry : row) {
-                String key = entry.getKey();
-                String fieldName = graphLabel.getFieldName(key);
-                Object o = graphLabel.reformatValue(fieldName, entry.getValue());
-                row.setProp(key, o);
-            }
-        }
-        return rows.getEntities(clazz);
+        QueryResult result = executeQuerySql(sql);
+        return result.getEntities(clazz);
     }
 
     @Override
