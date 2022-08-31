@@ -6,12 +6,10 @@
 package io.github.anyzm.graph.ocean.mapper;
 
 import com.google.common.collect.Lists;
-import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import io.github.anyzm.graph.ocean.common.utils.CollectionUtils;
-import io.github.anyzm.graph.ocean.common.utils.FieldUtils;
 import io.github.anyzm.graph.ocean.dao.*;
 import io.github.anyzm.graph.ocean.dao.impl.DefaultGraphEdgeEntityFactory;
 import io.github.anyzm.graph.ocean.dao.impl.DefaultGraphTypeManager;
@@ -33,9 +31,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -176,13 +172,13 @@ public class NebulaGraphMapper implements GraphMapper {
 
     @Override
     public int executeBatchUpdateSql(String space, List<String> sqlList) throws NebulaException {
-        for(int i=0;i<sqlList.size();i+=BATCH_SIZE) {
+        for (int i = 0; i < sqlList.size(); i += BATCH_SIZE) {
             List<String> sqls = sqlList.subList(i, Math.min(sqlList.size(), i + BATCH_SIZE));
             String sql = sqls.stream().collect(Collectors.joining(";"));
             NebulaSessionWrapper session = null;
             try {
                 session = nebulaPoolSessionManager.getSession();
-                int execute = session.execute(String.format(SQL,space,sql));
+                int execute = session.execute(String.format(SQL, space, sql));
                 CheckThrower.ifTrueThrow(execute != 0, ErrorEnum.UPDATE_NEBULA_EROR);
             } catch (IOErrorException | NotValidConnectionException | AuthFailedException e) {
                 log.error("批量执行sql异常,space={},sqlList={}", space, sqlList, e);
@@ -201,7 +197,7 @@ public class NebulaGraphMapper implements GraphMapper {
         NebulaSessionWrapper session = null;
         try {
             session = nebulaPoolSessionManager.getSession();
-            return session.execute(String.format(SQL,space,sql));
+            return session.execute(String.format(SQL, space, sql));
         } catch (IOErrorException | AuthFailedException e) {
             log.error("执行sql异常,space={},sql={}", space, sql, e);
             throw new NebulaException(ErrorEnum.SYSTEM_ERROR);
@@ -227,7 +223,7 @@ public class NebulaGraphMapper implements GraphMapper {
         NebulaSessionWrapper session = null;
         try {
             session = nebulaPoolSessionManager.getSession();
-            return session.executeQueryDefined(String.format(SQL,space,sql));
+            return session.executeQueryDefined(String.format(SQL, space, sql));
         } catch (IOErrorException | NotValidConnectionException | AuthFailedException e) {
             log.error("执行sql异常,space={},sql={}", space, sql, e);
             throw new NebulaException(ErrorEnum.SYSTEM_ERROR);
@@ -242,17 +238,7 @@ public class NebulaGraphMapper implements GraphMapper {
     public <T> List<T> executeQuerySql(String sql, Class<T> clazz) throws NebulaException, IllegalAccessException, InstantiationException, UnsupportedEncodingException {
         QueryResult result = executeQuerySql(sql);
         GraphLabel graphLabel = graphTypeManager.getGraphLabel(clazz);
-        List<T> list = result.getEntities(clazz);
-        List<Field> fields = FieldUtils.listFields(clazz);
-        for(T t : list) {
-            for(Field field : fields) {
-                field.setAccessible(true);
-                String fieldName = graphLabel.getFieldName(field.getName());
-                Object o = graphLabel.reformatValue(fieldName, field.get(t));
-                field.set(t,o);
-            }
-        }
-        return list;
+        return result.getEntities(graphLabel, clazz);
     }
 
     @Override

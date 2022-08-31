@@ -5,18 +5,22 @@
  */
 package io.github.anyzm.graph.ocean.domain.impl;
 
-import com.vesoft.nebula.client.graph.data.*;
+import com.vesoft.nebula.client.graph.data.ResultSet;
+import com.vesoft.nebula.client.graph.data.ValueWrapper;
 import io.github.anyzm.graph.ocean.annotation.GraphProperty;
 import io.github.anyzm.graph.ocean.common.utils.FieldUtils;
+import io.github.anyzm.graph.ocean.domain.GraphLabel;
 import io.github.anyzm.graph.ocean.enums.GraphDataTypeEnum;
-import io.github.anyzm.graph.ocean.common.utils.FieldUtils;
 import lombok.Getter;
 import lombok.ToString;
+
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -43,6 +47,7 @@ public class QueryResult implements Iterable<ResultSet.Record>, Serializable {
 
     /**
      * 将查询结果合并
+     *
      * @param queryResult
      * @return
      */
@@ -58,13 +63,13 @@ public class QueryResult implements Iterable<ResultSet.Record>, Serializable {
         return this;
     }
 
-    public <T> List<T> getEntities(Class<T> clazz) throws IllegalAccessException, InstantiationException, UnsupportedEncodingException {
-        if(this.data==null||this.data.isEmpty()) {
+    public <T> List<T> getEntities(GraphLabel graphLabel, Class<T> clazz) throws IllegalAccessException, InstantiationException, UnsupportedEncodingException {
+        if (this.data == null || this.data.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
         List<T> list = new ArrayList<>(this.data.size());
-        for(ResultSet.Record record : this.data) {
-            list.add(parseResult(record,clazz));
+        for (ResultSet.Record record : this.data) {
+            list.add(parseResult(record, graphLabel, clazz));
         }
         return list;
     }
@@ -91,58 +96,63 @@ public class QueryResult implements Iterable<ResultSet.Record>, Serializable {
         return StreamSupport.stream(iterable.spliterator(), false);
     }
 
+    private <T> void dealFieldReformat(GraphLabel graphLabel, String key, Field field, T obj, Object databaseValue) throws IllegalAccessException {
+        Object value = graphLabel != null ? graphLabel.reformatValue(key, databaseValue) : databaseValue;
+        field.set(obj, value);
+    }
+
     //解析nebula结果成java bean格式
-    private <T> T parseResult(ResultSet.Record record, Class<T> clazz) throws IllegalAccessException, InstantiationException, UnsupportedEncodingException {
+    private <T> T parseResult(ResultSet.Record record, GraphLabel graphLabel, Class<T> clazz) throws IllegalAccessException, InstantiationException, UnsupportedEncodingException {
         T obj = clazz.newInstance();
         List<Field> fieldsList = FieldUtils.listFields(clazz);
-        for(Field field : fieldsList) {
+        for (Field field : fieldsList) {
             GraphProperty annotation = field.getAnnotation(GraphProperty.class);
-            String key = annotation!=null?annotation.value():field.getName();
-            if(record.contains(key)) {
+            String key = annotation != null ? annotation.value() : field.getName();
+            if (record.contains(key)) {
                 ValueWrapper valueWrapper = record.get(key);
-                if(!valueWrapper.isNull()) {
+                if (!valueWrapper.isNull()) {
                     field.setAccessible(true);
-                    if(annotation!=null&&!GraphDataTypeEnum.NULL.equals(annotation.dataType())) {
+                    if (annotation != null && !GraphDataTypeEnum.NULL.equals(annotation.dataType())) {
                         switch (annotation.dataType()) {
                             case INT:
-                                field.set(obj,valueWrapper.asLong());
+                                dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asLong());
                                 break;
                             case STRING:
-                                field.set(obj,valueWrapper.asString());
+                                dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asString());
                                 break;
                             case DATE:
-                                field.set(obj,valueWrapper.asDate());
+                                dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asDate());
                                 break;
                             case DATE_TIME:
-                                field.set(obj,valueWrapper.asDateTime());
+                                dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asDateTime());
                                 break;
                             case BOOLEAN:
-                                field.set(obj,valueWrapper.asBoolean());
+                                dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asBoolean());
                                 break;
                             case TIMESTAMP:
-                                field.set(obj,valueWrapper.asTime());
+                                dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asTime());
                                 break;
                             case DOUBLE:
-                                field.set(obj,valueWrapper.asDouble());
+                                dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asDouble());
                                 break;
                             default:
                         }
                         continue;
                     }
-                    if(valueWrapper.isLong()&&Long.class.equals(field.getType())) {
-                        field.set(obj,valueWrapper.asLong());
-                    } else if(valueWrapper.isBoolean()&&Boolean.class.equals(field.getType())) {
-                        field.set(obj,valueWrapper.asBoolean());
-                    } else if(valueWrapper.isDouble()&&Double.class.equals(field.getType())) {
-                        field.set(obj,valueWrapper.asDouble());
-                    } else if(valueWrapper.isDate()&& DateWrapper.class.equals(field.getType())) {
-                        field.set(obj,valueWrapper.asDate());
-                    } else if(valueWrapper.isDateTime()&& DateTimeWrapper.class.equals(field.getType())) {
-                        field.set(obj,valueWrapper.asDateTime());
-                    } else if(valueWrapper.isTime()&& TimeWrapper.class.equals(field.getType())) {
-                        field.set(obj,valueWrapper.asTime());
-                    } else if(valueWrapper.isString()&&String.class.equals(field.getType())) {
-                        field.set(obj,valueWrapper.asString());
+                    if (valueWrapper.isLong()) {
+                        dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asLong());
+                    } else if (valueWrapper.isBoolean()) {
+                        dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asBoolean());
+                    } else if (valueWrapper.isDouble()) {
+                        dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asDouble());
+                    } else if (valueWrapper.isDate()) {
+                        dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asDouble());
+                    } else if (valueWrapper.isDateTime()) {
+                        dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asDateTime());
+                    } else if (valueWrapper.isTime()) {
+                        dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asTime());
+                    } else if (valueWrapper.isString()) {
+                        dealFieldReformat(graphLabel, key, field, obj, valueWrapper.asString());
                     }
                 }
             }
