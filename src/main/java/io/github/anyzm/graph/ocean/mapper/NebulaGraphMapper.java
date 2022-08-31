@@ -6,10 +6,12 @@
 package io.github.anyzm.graph.ocean.mapper;
 
 import com.google.common.collect.Lists;
+import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import io.github.anyzm.graph.ocean.common.utils.CollectionUtils;
+import io.github.anyzm.graph.ocean.common.utils.FieldUtils;
 import io.github.anyzm.graph.ocean.dao.*;
 import io.github.anyzm.graph.ocean.dao.impl.DefaultGraphEdgeEntityFactory;
 import io.github.anyzm.graph.ocean.dao.impl.DefaultGraphTypeManager;
@@ -30,6 +32,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -235,18 +239,20 @@ public class NebulaGraphMapper implements GraphMapper {
     }
 
     @Override
-    public <T> List<T> executeQuerySql(String sql, Class<T> clazz) throws NebulaException {
-        QueryResult rows = executeQuerySql(sql);
+    public <T> List<T> executeQuerySql(String sql, Class<T> clazz) throws NebulaException, IllegalAccessException, InstantiationException, UnsupportedEncodingException {
+        QueryResult result = executeQuerySql(sql);
         GraphLabel graphLabel = graphTypeManager.getGraphLabel(clazz);
-        for (QueryResult.Row row : rows) {
-            for (Map.Entry<String, Object> entry : row) {
-                String key = entry.getKey();
-                String fieldName = graphLabel.getFieldName(key);
-                Object o = graphLabel.reformatValue(fieldName, entry.getValue());
-                row.setProp(key, o);
+        List<T> list = result.getEntities(clazz);
+        List<Field> fields = FieldUtils.listFields(clazz);
+        for(T t : list) {
+            for(Field field : fields) {
+                field.setAccessible(true);
+                String fieldName = graphLabel.getFieldName(field.getName());
+                Object o = graphLabel.reformatValue(fieldName, field.get(t));
+                field.set(t,o);
             }
         }
-        return rows.getEntities(clazz);
+        return list;
     }
 
     @Override
@@ -260,12 +266,12 @@ public class NebulaGraphMapper implements GraphMapper {
     }
 
     @Override
-    public <T> List<T> executeQuery(GraphQuery query, Class<T> clazz) throws NebulaException {
+    public <T> List<T> executeQuery(GraphQuery query, Class<T> clazz) throws NebulaException, IllegalAccessException, InstantiationException, UnsupportedEncodingException {
         return executeQuerySql(query.buildSql(), clazz);
     }
 
     @Override
-    public <T> List<T> goOutEdge(Class<T> edgeClazz, String... vertexIds) {
+    public <T> List<T> goOutEdge(Class<T> edgeClazz, String... vertexIds) throws UnsupportedEncodingException, IllegalAccessException, InstantiationException {
         GraphEdgeType<Object, Object, T> graphEdgeType = graphTypeManager.getGraphEdgeType(edgeClazz);
         String[] fieldsName = CollectionUtils.toStringArray(graphEdgeType.getAllFields());
         EdgeQuery query = NebulaEdgeQuery.build().goFrom(edgeClazz, vertexIds).yield(edgeClazz, fieldsName);
@@ -273,7 +279,7 @@ public class NebulaGraphMapper implements GraphMapper {
     }
 
     @Override
-    public <T> List<T> goReverseEdge(Class<T> edgeClazz, String... vertexIds) {
+    public <T> List<T> goReverseEdge(Class<T> edgeClazz, String... vertexIds) throws UnsupportedEncodingException, IllegalAccessException, InstantiationException {
         GraphEdgeType<Object, Object, T> graphEdgeType = graphTypeManager.getGraphEdgeType(edgeClazz);
         String[] fieldsName = CollectionUtils.toStringArray(graphEdgeType.getAllFields());
         EdgeQuery query = NebulaEdgeQuery.build().goFrom(edgeClazz, EdgeDirectionEnum.REVERSELY, vertexIds).yield(edgeClazz, fieldsName);
@@ -281,7 +287,7 @@ public class NebulaGraphMapper implements GraphMapper {
     }
 
     @Override
-    public <T> List<T> fetchVertexTag(Class<T> vertexClazz, String... vertexIds) {
+    public <T> List<T> fetchVertexTag(Class<T> vertexClazz, String... vertexIds) throws UnsupportedEncodingException, IllegalAccessException, InstantiationException {
         GraphVertexType<T> graphVertexType = graphTypeManager.getGraphVertexType(vertexClazz);
         String[] fieldsName = CollectionUtils.toStringArray(graphVertexType.getAllFields());
         VertexQuery query = NebulaVertexQuery.build().fetchPropOn(vertexClazz, vertexIds).yield(vertexClazz, fieldsName);
