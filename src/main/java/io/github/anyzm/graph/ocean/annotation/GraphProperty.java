@@ -33,7 +33,7 @@ public @interface GraphProperty {
      *
      * @return 数据类型
      */
-    GraphDataTypeEnum dataType() default GraphDataTypeEnum.STRING;
+    GraphDataTypeEnum dataType();
 
     /**
      *

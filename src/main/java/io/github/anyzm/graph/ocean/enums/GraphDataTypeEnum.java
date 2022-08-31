@@ -12,6 +12,8 @@ package io.github.anyzm.graph.ocean.enums;
  * @author Anyzm
  * Date  2021/7/19 - 17:13
  * @version 1.0.0
+ * @update chenui
+ * @date 2022/08/31
  */
 public enum GraphDataTypeEnum {
     /**
@@ -34,6 +36,10 @@ public enum GraphDataTypeEnum {
      * 日期
      */
     DATE,
+
+    DATE_TIME,
+    //布尔值
+    BOOLEAN
     ;
 
 }

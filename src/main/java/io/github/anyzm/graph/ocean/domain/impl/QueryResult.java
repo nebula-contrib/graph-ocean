@@ -6,7 +6,9 @@
 package io.github.anyzm.graph.ocean.domain.impl;
 
 import com.vesoft.nebula.client.graph.data.*;
+import io.github.anyzm.graph.ocean.annotation.GraphProperty;
 import io.github.anyzm.graph.ocean.common.utils.FieldUtils;
+import io.github.anyzm.graph.ocean.enums.GraphDataTypeEnum;
 import lombok.Getter;
 import lombok.ToString;
 import java.io.Serializable;
@@ -93,11 +95,39 @@ public class QueryResult implements Iterable<ResultSet.Record>, Serializable {
         T obj = clazz.newInstance();
         List<Field> fieldsList = FieldUtils.listFields(clazz);
         for(Field field : fieldsList) {
-            String key = field.getName();
+            GraphProperty annotation = field.getAnnotation(GraphProperty.class);
+            String key = annotation!=null?annotation.value():field.getName();
             if(record.contains(key)) {
                 ValueWrapper valueWrapper = record.get(key);
                 if(!valueWrapper.isNull()) {
                     field.setAccessible(true);
+                    if(annotation!=null&&annotation.dataType()!=null) {
+                        switch (annotation.dataType()) {
+                            case INT:
+                                field.set(obj,valueWrapper.asLong());
+                                break;
+                            case STRING:
+                                field.set(obj,valueWrapper.asString());
+                                break;
+                            case DATE:
+                                field.set(obj,valueWrapper.asDate());
+                                break;
+                            case DATE_TIME:
+                                field.set(obj,valueWrapper.asDateTime());
+                                break;
+                            case BOOLEAN:
+                                field.set(obj,valueWrapper.asBoolean());
+                                break;
+                            case TIMESTAMP:
+                                field.set(obj,valueWrapper.asTime());
+                                break;
+                            case DOUBLE:
+                                field.set(obj,valueWrapper.asDouble());
+                                break;
+                            default:
+                        }
+                        continue;
+                    }
                     if(valueWrapper.isLong()&&Long.class.equals(field.getType())) {
                         field.set(obj,valueWrapper.asLong());
                     } else if(valueWrapper.isBoolean()&&Boolean.class.equals(field.getType())) {
