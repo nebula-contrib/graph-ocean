@@ -9,6 +9,7 @@ import com.vesoft.nebula.client.graph.data.*;
 import io.github.anyzm.graph.ocean.annotation.GraphProperty;
 import io.github.anyzm.graph.ocean.common.utils.FieldUtils;
 import io.github.anyzm.graph.ocean.enums.GraphDataTypeEnum;
+import io.github.anyzm.graph.ocean.common.utils.FieldUtils;
 import lombok.Getter;
 import lombok.ToString;
 import java.io.Serializable;
