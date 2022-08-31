@@ -252,7 +252,7 @@ public class NebulaGraphMapper implements GraphMapper {
                 field.set(t,o);
             }
         }
-        return result.getEntities(clazz);
+        return list;
     }
 
     @Override
