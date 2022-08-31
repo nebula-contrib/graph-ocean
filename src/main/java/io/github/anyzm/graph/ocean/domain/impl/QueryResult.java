@@ -27,6 +27,7 @@ import java.util.stream.StreamSupport;
 public class QueryResult implements Iterable<ResultSet.Record>, Serializable {
 
     @Getter
+
     private List<ResultSet.Record> data = new ArrayList<>();
 
     public QueryResult() {
