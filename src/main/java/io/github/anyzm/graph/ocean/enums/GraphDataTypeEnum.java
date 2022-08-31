@@ -36,10 +36,12 @@ public enum GraphDataTypeEnum {
      * 日期
      */
     DATE,
-
+    //日期+时间
     DATE_TIME,
     //布尔值
-    BOOLEAN
+    BOOLEAN,
+    //空值
+    NULL
     ;
 
 }

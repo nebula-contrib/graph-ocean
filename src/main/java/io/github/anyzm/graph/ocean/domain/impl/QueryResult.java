@@ -102,7 +102,7 @@ public class QueryResult implements Iterable<ResultSet.Record>, Serializable {
                 ValueWrapper valueWrapper = record.get(key);
                 if(!valueWrapper.isNull()) {
                     field.setAccessible(true);
-                    if(annotation!=null&&annotation.dataType()!=null) {
+                    if(annotation!=null&&!GraphDataTypeEnum.NULL.equals(annotation.dataType())) {
                         switch (annotation.dataType()) {
                             case INT:
                                 field.set(obj,valueWrapper.asLong());
