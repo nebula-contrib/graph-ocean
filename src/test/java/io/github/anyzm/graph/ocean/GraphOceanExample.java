@@ -18,6 +18,7 @@ import io.github.anyzm.graph.ocean.session.NebulaPoolSessionManager;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -81,7 +82,7 @@ public class GraphOceanExample {
         return new NebulaGraphMapper(nebulaPoolSessionManager, space);
     }
 
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) throws UnknownHostException, UnsupportedEncodingException, IllegalAccessException, InstantiationException {
         NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager(
                 nebulaPool(nebulaPoolConfig())));
         User user = new User("UR123", "张三");

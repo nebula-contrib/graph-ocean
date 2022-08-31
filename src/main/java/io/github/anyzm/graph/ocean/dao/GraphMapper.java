@@ -10,6 +10,8 @@ import io.github.anyzm.graph.ocean.domain.GraphQuery;
 import io.github.anyzm.graph.ocean.domain.impl.QueryResult;
 import io.github.anyzm.graph.ocean.exception.NebulaException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.function.Function;
 
@@ -123,7 +125,7 @@ public interface GraphMapper {
      * @return 查询的实体列表
      * @throws NebulaException nebula异常
      */
-    public <T> List<T> executeQuerySql(String sql, Class<T> clazz) throws NebulaException;
+    public <T> List<T> executeQuerySql(String sql, Class<T> clazz) throws NebulaException, IllegalAccessException, InstantiationException, UnsupportedEncodingException;
 
 
     /**
@@ -156,7 +158,7 @@ public interface GraphMapper {
      * @return 实体列表
      * @throws NebulaException nebula异常
      */
-    public <T> List<T> executeQuery(GraphQuery query, Class<T> clazz) throws NebulaException;
+    public <T> List<T> executeQuery(GraphQuery query, Class<T> clazz) throws NebulaException, IllegalAccessException, InstantiationException, UnsupportedEncodingException;
 
 
     /**
@@ -166,7 +168,7 @@ public interface GraphMapper {
      * @param vertexIds 顶点id
      * @return 出边列表
      */
-    public <T> List<T> goOutEdge(Class<T> edgeClazz, String... vertexIds);
+    public <T> List<T> goOutEdge(Class<T> edgeClazz, String... vertexIds) throws UnsupportedEncodingException, IllegalAccessException, InstantiationException;
 
     /**
      * 查询反向边
@@ -176,7 +178,7 @@ public interface GraphMapper {
      * @param <T> 入边类型
      * @return 入边列表
      */
-    public <T> List<T> goReverseEdge(Class<T> edgeClazz, String... vertexIds);
+    public <T> List<T> goReverseEdge(Class<T> edgeClazz, String... vertexIds) throws UnsupportedEncodingException, IllegalAccessException, InstantiationException;
 
     /**
      * 查询tag
@@ -185,6 +187,6 @@ public interface GraphMapper {
      * @param vertexIds 顶点id
      * @return 顶点列表
      */
-    public <T> List<T> fetchVertexTag(Class<T> vertexClazz, String... vertexIds);
+    public <T> List<T> fetchVertexTag(Class<T> vertexClazz, String... vertexIds) throws UnsupportedEncodingException, IllegalAccessException, InstantiationException;
 
 }

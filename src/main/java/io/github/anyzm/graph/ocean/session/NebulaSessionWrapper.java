@@ -25,6 +25,8 @@ import java.util.stream.IntStream;
  * Date  2021/7/15 - 16:49
  * nebula-session包装类，区别读写执行，加强返回结果的封装
  * @version 1.0.0
+ * @update chenui
+ * @date 2022/08/31
  */
 @Slf4j
 public class NebulaSessionWrapper implements NebulaSession {

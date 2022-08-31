@@ -6,9 +6,11 @@
 package io.github.anyzm.graph.ocean.domain.impl;
 
 import com.vesoft.nebula.client.graph.data.*;
+import io.github.anyzm.graph.ocean.common.utils.FieldUtils;
 import lombok.Getter;
 import lombok.ToString;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,7 +29,6 @@ import java.util.stream.StreamSupport;
 public class QueryResult implements Iterable<ResultSet.Record>, Serializable {
 
     @Getter
-
     private List<ResultSet.Record> data = new ArrayList<>();
 
     public QueryResult() {
@@ -54,11 +55,15 @@ public class QueryResult implements Iterable<ResultSet.Record>, Serializable {
         return this;
     }
 
-    public <T> List<T> getEntities(Class<T> clazz) {
+    public <T> List<T> getEntities(Class<T> clazz) throws IllegalAccessException, InstantiationException, UnsupportedEncodingException {
         if(this.data==null||this.data.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
-        return this.data.stream().map(record -> parseResult(record,clazz)).collect(Collectors.toList());
+        List<T> list = new ArrayList<>(this.data.size());
+        for(ResultSet.Record record : this.data) {
+            list.add(parseResult(record,clazz));
+        }
+        return list;
     }
 
     public int size() {
@@ -84,45 +89,29 @@ public class QueryResult implements Iterable<ResultSet.Record>, Serializable {
     }
 
     //解析nebula结果成java bean格式
-    private <T> T parseResult(ResultSet.Record record, Class<T> clazz) {
-        T obj;
-        try {
-            obj = clazz.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        List<Field> fieldsList = new ArrayList<>();
-        Class<?> c = clazz;
-        while (!Object.class.equals(c)) {  // 遍历所有父类字节码对象
-            Field[] declaredFields = clazz.getDeclaredFields();
-            fieldsList.addAll(Arrays.asList(declaredFields));
-            c = c.getSuperclass();
-        }
+    private <T> T parseResult(ResultSet.Record record, Class<T> clazz) throws IllegalAccessException, InstantiationException, UnsupportedEncodingException {
+        T obj = clazz.newInstance();
+        List<Field> fieldsList = FieldUtils.listFields(clazz);
         for(Field field : fieldsList) {
             String key = field.getName();
             if(record.contains(key)) {
                 ValueWrapper valueWrapper = record.get(key);
                 if(!valueWrapper.isNull()) {
                     field.setAccessible(true);
-                    try {
-                        if(valueWrapper.isLong()&&Long.class.equals(field.getType())) {
-                            field.set(obj,valueWrapper.asLong());
-                        } else if(valueWrapper.isBoolean()&&Boolean.class.equals(field.getType())) {
-                            field.set(obj,valueWrapper.asBoolean());
-                        } else if(valueWrapper.isDouble()&&Double.class.equals(field.getType())) {
-                            field.set(obj,valueWrapper.asDouble());
-                        } else if(valueWrapper.isDate()&& DateWrapper.class.equals(field.getType())) {
-                            field.set(obj,valueWrapper.asDate());
-                        } else if(valueWrapper.isDateTime()&& DateTimeWrapper.class.equals(field.getType())) {
-                            field.set(obj,valueWrapper.asDateTime());
-                        } else if(valueWrapper.isTime()&& TimeWrapper.class.equals(field.getType())) {
-                            field.set(obj,valueWrapper.asTime());
-                        } else if(valueWrapper.isString()&&String.class.equals(field.getType())) {
-                            field.set(obj,valueWrapper.asString());
-                        }
-                    }catch (Exception e) {
-                        e.printStackTrace();
+                    if(valueWrapper.isLong()&&Long.class.equals(field.getType())) {
+                        field.set(obj,valueWrapper.asLong());
+                    } else if(valueWrapper.isBoolean()&&Boolean.class.equals(field.getType())) {
+                        field.set(obj,valueWrapper.asBoolean());
+                    } else if(valueWrapper.isDouble()&&Double.class.equals(field.getType())) {
+                        field.set(obj,valueWrapper.asDouble());
+                    } else if(valueWrapper.isDate()&& DateWrapper.class.equals(field.getType())) {
+                        field.set(obj,valueWrapper.asDate());
+                    } else if(valueWrapper.isDateTime()&& DateTimeWrapper.class.equals(field.getType())) {
+                        field.set(obj,valueWrapper.asDateTime());
+                    } else if(valueWrapper.isTime()&& TimeWrapper.class.equals(field.getType())) {
+                        field.set(obj,valueWrapper.asTime());
+                    } else if(valueWrapper.isString()&&String.class.equals(field.getType())) {
+                        field.set(obj,valueWrapper.asString());
                     }
                 }
             }
