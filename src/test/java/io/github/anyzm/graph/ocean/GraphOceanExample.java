@@ -3,6 +3,10 @@ package io.github.anyzm.graph.ocean;
 import com.google.common.collect.Lists;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.data.HostAddress;
+import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
+import com.vesoft.nebula.client.graph.exception.IOErrorException;
+import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import com.vesoft.nebula.client.graph.net.NebulaPool;
 import io.github.anyzm.graph.ocean.annotation.GraphEdge;
 import io.github.anyzm.graph.ocean.annotation.GraphProperty;
@@ -82,7 +86,7 @@ public class GraphOceanExample {
         return new NebulaGraphMapper(nebulaPoolSessionManager, space);
     }
 
-    public static void main(String[] args) throws UnknownHostException, UnsupportedEncodingException, IllegalAccessException, InstantiationException {
+    public static void main(String[] args) throws UnknownHostException, UnsupportedEncodingException, IllegalAccessException, InstantiationException, ClientServerIncompatibleException, AuthFailedException, NotValidConnectionException, IOErrorException {
         NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager(
                 nebulaPool(nebulaPoolConfig())));
         User user = new User("UR123", "张三");
