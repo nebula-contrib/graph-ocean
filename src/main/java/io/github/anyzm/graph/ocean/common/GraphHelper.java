@@ -5,6 +5,8 @@
  */
 package io.github.anyzm.graph.ocean.common;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.github.anyzm.graph.ocean.annotation.GraphProperty;
 import io.github.anyzm.graph.ocean.dao.GraphValueFormatter;
 import io.github.anyzm.graph.ocean.domain.GraphLabel;
@@ -16,8 +18,6 @@ import io.github.anyzm.graph.ocean.enums.GraphDataTypeEnum;
 import io.github.anyzm.graph.ocean.enums.GraphKeyPolicy;
 import io.github.anyzm.graph.ocean.enums.GraphPropertyTypeEnum;
 import io.github.anyzm.graph.ocean.exception.NebulaException;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -138,7 +138,7 @@ public class GraphHelper {
                 }
                 if (GraphValueFormatter.class != formatter) {
                     try {
-                        graphLabelBuilder.dstIdValueFormatter(formatter.newInstance());
+                        graphLabelBuilder.idValueFormatter(formatter.newInstance());
                     } catch (Exception e) {
                         throw new NebulaException(ErrorEnum.FIELD_FORMAT_NO_CONSTRUCTOR);
                     }
