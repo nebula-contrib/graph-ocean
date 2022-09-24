@@ -15,7 +15,7 @@
     <version>1.0.0</version>
 
     <properties>
-        <nebula-java.version>2.0.0-rc1</nebula-java.version>
+        <nebula-java.version>3.0.0</nebula-java.version>
         <fastjson.verson>1.2.79</fastjson.verson>
         <log4j-api.version>2.11.2</log4j-api.version>
         <lombok.version>1.18.12</lombok.version>
