@@ -12,7 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.anyzm</groupId>
     <artifactId>graph-ocean</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0-rc1</version>
 
     <properties>
         <nebula-java.version>2.0.0-rc1</nebula-java.version>
