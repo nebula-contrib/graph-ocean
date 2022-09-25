@@ -20,15 +20,18 @@ nebula 2.x的maven项目引入坐标：
 </dependency>
 ```
 <br/>
+
 nebula 3.x的maven项目引入坐标：
-```java
+```
 <dependency>
     <groupId>io.github.anyzm</groupId>
     <artifactId>graph-ocean</artifactId>
     <version>3.0.0</version>
 </dependency>
 ```
+
 <br/>
+
 1.0.0支持的是nebula-java2.0.0-rc1，这个版本的java客户端亲测可以支持nebula 2.5.0，猜想应该也能支持nebula2系列的各服务端版本（未一一验证，大家可以先在测试环境验证）。
 <br/>
 另外如果nebula-java客户端的连接池API没有改动的话，也可以在pom中剔除nebula-java，然后引入自己需要的客户端版本。
