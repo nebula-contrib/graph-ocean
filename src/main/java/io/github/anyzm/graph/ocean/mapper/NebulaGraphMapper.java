@@ -7,6 +7,7 @@ package io.github.anyzm.graph.ocean.mapper;
 
 import com.google.common.collect.Lists;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
+import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.exception.NotValidConnectionException;
 import io.github.anyzm.graph.ocean.common.utils.CollectionUtils;
@@ -47,7 +48,7 @@ public class NebulaGraphMapper implements GraphMapper {
 
     private static final int BATCH_SIZE = 500;
 
-    private static final String SQL = "execute %s ; %s;";
+    private static final String SQL = "use %s ; %s;";
 
     @Setter
     @Getter
@@ -183,6 +184,9 @@ public class NebulaGraphMapper implements GraphMapper {
             } catch (IOErrorException | NotValidConnectionException | AuthFailedException e) {
                 log.error("批量执行sql异常,space={},sqlList={}", space, sqlList, e);
                 throw new NebulaException(ErrorEnum.SYSTEM_ERROR);
+            } catch (ClientServerIncompatibleException e) {
+                log.error("客户端与服务器版本不一致");
+                throw new NebulaException(ErrorEnum.CLIENT_SERVER_INCOMPATIBLE);
             } finally {
                 if (session != null) {
                     session.release();
@@ -201,6 +205,9 @@ public class NebulaGraphMapper implements GraphMapper {
         } catch (IOErrorException | AuthFailedException e) {
             log.error("执行sql异常,space={},sql={}", space, sql, e);
             throw new NebulaException(ErrorEnum.SYSTEM_ERROR);
+        } catch (ClientServerIncompatibleException e) {
+            log.error("客户端与服务器版本不一致");
+            throw new NebulaException(ErrorEnum.CLIENT_SERVER_INCOMPATIBLE);
         } finally {
             if (session != null) {
                 session.release();
@@ -227,6 +234,9 @@ public class NebulaGraphMapper implements GraphMapper {
         } catch (IOErrorException | NotValidConnectionException | AuthFailedException e) {
             log.error("执行sql异常,space={},sql={}", space, sql, e);
             throw new NebulaException(ErrorEnum.SYSTEM_ERROR);
+        } catch (ClientServerIncompatibleException e) {
+            log.error("客户端与服务器版本不一致");
+            throw new NebulaException(ErrorEnum.CLIENT_SERVER_INCOMPATIBLE);
         } finally {
             if (session != null) {
                 session.release();

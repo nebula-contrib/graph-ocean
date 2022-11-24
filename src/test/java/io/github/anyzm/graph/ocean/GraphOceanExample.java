@@ -36,7 +36,7 @@ public class GraphOceanExample {
 
     private static int nebulaPoolTimeout = 300000;
 
-    private static String nebulaCluster = "10.220.193.183:9669";
+    private static String nebulaCluster = "127.0.0.1:9669";
 
     private static String userName = "root";
 
@@ -108,10 +108,10 @@ public class GraphOceanExample {
     @GraphVertex(value = "user", keyPolicy = GraphKeyPolicy.string_key)
     @Data
     public static class User {
-        @GraphProperty(value = "user_no", required = true,
-                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_VERTEX_ID)
+        @GraphProperty(value = "user_no",
+                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_VERTEX_ID, dataType = GraphDataTypeEnum.STRING)
         private String userNo;
-        @GraphProperty(value = "user_name", required = true)
+        @GraphProperty(value = "user_name", dataType = GraphDataTypeEnum.STRING)
         private String userName;
 
         public User() {
@@ -123,7 +123,7 @@ public class GraphOceanExample {
         }
     }
 
-    @GraphEdge(value = "follow", srcVertex = User.class, dstVertex = User.class)
+    @GraphEdge(value = "follow", srcVertex = User.class, dstVertex = User.class, srcIdAsField = false, dstIdAsField = false)
     @Data
     public static class Follow {
         @GraphProperty(value = "user_no1", required = true,

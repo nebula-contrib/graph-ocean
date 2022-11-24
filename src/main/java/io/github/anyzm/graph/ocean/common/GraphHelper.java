@@ -18,7 +18,7 @@ import io.github.anyzm.graph.ocean.enums.GraphDataTypeEnum;
 import io.github.anyzm.graph.ocean.enums.GraphKeyPolicy;
 import io.github.anyzm.graph.ocean.enums.GraphPropertyTypeEnum;
 import io.github.anyzm.graph.ocean.exception.NebulaException;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.lang.reflect.Field;
@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * @author Anyzm
  * date 2020/4/16
  */
-@Log4j2
+@Slf4j
 public class GraphHelper {
     private static String ENDPOINT_TEMPLATE = "%s(\"%s\")";
     private static String STRING_ID_TEMPLATE = "%s \"%s\" ";
