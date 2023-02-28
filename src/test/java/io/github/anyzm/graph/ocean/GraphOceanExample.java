@@ -19,6 +19,7 @@ import io.github.anyzm.graph.ocean.enums.GraphKeyPolicy;
 import io.github.anyzm.graph.ocean.enums.GraphPropertyTypeEnum;
 import io.github.anyzm.graph.ocean.mapper.NebulaGraphMapper;
 import io.github.anyzm.graph.ocean.session.NebulaPoolSessionManager;
+import io.github.anyzm.graph.ocean.session.NebulaSessionWrapper;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -87,8 +88,13 @@ public class GraphOceanExample {
     }
 
     public static void main(String[] args) throws UnknownHostException, UnsupportedEncodingException, IllegalAccessException, InstantiationException, ClientServerIncompatibleException, AuthFailedException, NotValidConnectionException, IOErrorException {
-        NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager(
-                nebulaPool(nebulaPoolConfig())));
+        NebulaPoolSessionManager nebulaPoolSessionManager = nebulaPoolSessionManager(nebulaPool(nebulaPoolConfig()));
+        NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager);
+        NebulaSessionWrapper session = nebulaPoolSessionManager.getSession();
+        session.execute("CREATE SPACE IF NOT EXISTS test (vid_type=FIXED_STRING(30))");
+        session.execute("CREATE TAG IF NOT EXISTS user(user_no string, user_name string)");
+        session.execute("CREATE EDGE IF NOT EXISTS follow(user_no1 string,user_no2 string,follow_type int)");
+        session.release();
         User user = new User("UR123", "张三");
         //保存顶点
         int i = nebulaGraphMapper.saveVertexEntities(Lists.newArrayList(user));
@@ -104,7 +110,7 @@ public class GraphOceanExample {
         List<Follow> fans = nebulaGraphMapper.goReverseEdge(Follow.class, "UR123");
         //查询API
         VertexQuery queryUserName = NebulaVertexQuery.build().fetchPropOn(User.class, "UR123")
-                .yield(User.class,"userName");
+                .yield(User.class, "userName");
         QueryResult rows = nebulaGraphMapper.executeQuery(queryUserName);
         System.out.println(rows);
     }
