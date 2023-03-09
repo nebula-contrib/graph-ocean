@@ -41,7 +41,7 @@ public class GraphOceanExample {
 
     private static int nebulaPoolTimeout = 300000;
 
-    private static String nebulaCluster = "10.220.193.183:9669";
+    private static String nebulaCluster = "192.168.1.133:9669";
 
     private static String userName = "root";
 
@@ -91,9 +91,11 @@ public class GraphOceanExample {
         NebulaPoolSessionManager nebulaPoolSessionManager = nebulaPoolSessionManager(nebulaPool(nebulaPoolConfig()));
         NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager);
         NebulaSessionWrapper session = nebulaPoolSessionManager.getSession();
-        session.execute("CREATE SPACE IF NOT EXISTS test (vid_type=FIXED_STRING(30))");
-        session.execute("CREATE TAG IF NOT EXISTS user(user_no string, user_name string)");
-        session.execute("CREATE EDGE IF NOT EXISTS follow(user_no1 string,user_no2 string,follow_type int)");
+        session.execute("CREATE SPACE IF NOT EXISTS test (REPLICA_FACTOR=1,vid_type=FIXED_STRING(30))");
+        session.release();
+        session = nebulaPoolSessionManager.getSession();
+        session.execute("use test;CREATE TAG IF NOT EXISTS user(user_no string, user_name string)");
+        session.execute("use test;CREATE EDGE IF NOT EXISTS follow(user_no1 string,user_no2 string,follow_type int)");
         session.release();
         User user = new User("UR123", "张三");
         //保存顶点
@@ -119,9 +121,9 @@ public class GraphOceanExample {
     @Data
     public static class User {
         @GraphProperty(value = "user_no", required = true,
-                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_VERTEX_ID)
+                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_VERTEX_ID, dataType = GraphDataTypeEnum.STRING)
         private String userNo;
-        @GraphProperty(value = "user_name", required = true)
+        @GraphProperty(value = "user_name", dataType = GraphDataTypeEnum.STRING, required = true)
         private String userName;
 
         public User() {
@@ -137,10 +139,10 @@ public class GraphOceanExample {
     @Data
     public static class Follow {
         @GraphProperty(value = "user_no1", required = true,
-                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_SRC_ID)
+                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_SRC_ID, dataType = GraphDataTypeEnum.STRING)
         private String userNo1;
         @GraphProperty(value = "user_no2", required = true,
-                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_DST_ID)
+                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_DST_ID, dataType = GraphDataTypeEnum.STRING)
         private String userNo2;
         @GraphProperty(value = "follow_type", required = true, dataType = GraphDataTypeEnum.INT)
         private Integer followType;
