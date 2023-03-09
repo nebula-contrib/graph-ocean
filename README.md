@@ -19,6 +19,7 @@ nebula 2.x的maven项目引入坐标：
     <version>2.0.0-rc1</version>
 </dependency>
 ```
+
 <br/>
 
 nebula 3.x的maven项目引入坐标：
@@ -26,7 +27,7 @@ nebula 3.x的maven项目引入坐标：
 <dependency>
     <groupId>io.github.anyzm</groupId>
     <artifactId>graph-ocean</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
 </dependency>
 ```
 
