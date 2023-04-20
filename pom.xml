@@ -15,10 +15,10 @@
     <version>2.0.0-rc1</version>
 
     <properties>
-        <nebula-java.version>2.0.0-rc1</nebula-java.version>
+        <nebula-java.version>2.6.2</nebula-java.version>
         <fastjson.verson>1.2.79</fastjson.verson>
         <log4j-api.version>2.11.2</log4j-api.version>
-        <lombok.version>1.18.12</lombok.version>
+        <lombok.version>1.18.20</lombok.version>
         <beanutils.version>1.9.4</beanutils.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
         <java.version>1.8</java.version>
@@ -34,10 +34,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-1.2-api</artifactId>
-            <version>${log4j-api.version}</version>
-            <scope>provided</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>2.0.4</version>
         </dependency>
 
         <dependency>
