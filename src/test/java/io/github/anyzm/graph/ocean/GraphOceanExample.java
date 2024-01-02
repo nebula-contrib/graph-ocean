@@ -19,6 +19,7 @@ import io.github.anyzm.graph.ocean.enums.GraphKeyPolicy;
 import io.github.anyzm.graph.ocean.enums.GraphPropertyTypeEnum;
 import io.github.anyzm.graph.ocean.mapper.NebulaGraphMapper;
 import io.github.anyzm.graph.ocean.session.NebulaPoolSessionManager;
+import io.github.anyzm.graph.ocean.session.NebulaSessionWrapper;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,7 +41,7 @@ public class GraphOceanExample {
 
     private static int nebulaPoolTimeout = 300000;
 
-    private static String nebulaCluster = "10.220.193.183:9669";
+    private static String nebulaCluster = "192.168.1.133:9669";
 
     private static String userName = "root";
 
@@ -87,8 +88,15 @@ public class GraphOceanExample {
     }
 
     public static void main(String[] args) throws UnknownHostException, UnsupportedEncodingException, IllegalAccessException, InstantiationException, ClientServerIncompatibleException, AuthFailedException, NotValidConnectionException, IOErrorException {
-        NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager(
-                nebulaPool(nebulaPoolConfig())));
+        NebulaPoolSessionManager nebulaPoolSessionManager = nebulaPoolSessionManager(nebulaPool(nebulaPoolConfig()));
+        NebulaGraphMapper nebulaGraphMapper = nebulaGraphMapper(nebulaPoolSessionManager);
+        NebulaSessionWrapper session = nebulaPoolSessionManager.getSession();
+        session.execute("CREATE SPACE IF NOT EXISTS test (REPLICA_FACTOR=1,vid_type=FIXED_STRING(30))");
+        session.release();
+        session = nebulaPoolSessionManager.getSession();
+        session.execute("use test;CREATE TAG IF NOT EXISTS user(user_no string, user_name string)");
+        session.execute("use test;CREATE EDGE IF NOT EXISTS follow(user_no1 string,user_no2 string,follow_type int)");
+        session.release();
         User user = new User("UR123", "张三");
         //保存顶点
         int i = nebulaGraphMapper.saveVertexEntities(Lists.newArrayList(user));
@@ -104,7 +112,7 @@ public class GraphOceanExample {
         List<Follow> fans = nebulaGraphMapper.goReverseEdge(Follow.class, "UR123");
         //查询API
         VertexQuery queryUserName = NebulaVertexQuery.build().fetchPropOn(User.class, "UR123")
-                .yield(User.class,"userName");
+                .yield(User.class, "userName");
         QueryResult rows = nebulaGraphMapper.executeQuery(queryUserName);
         System.out.println(rows);
     }
@@ -113,9 +121,9 @@ public class GraphOceanExample {
     @Data
     public static class User {
         @GraphProperty(value = "user_no", required = true,
-                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_VERTEX_ID)
+                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_VERTEX_ID, dataType = GraphDataTypeEnum.STRING)
         private String userNo;
-        @GraphProperty(value = "user_name", required = true)
+        @GraphProperty(value = "user_name", dataType = GraphDataTypeEnum.STRING, required = true)
         private String userName;
 
         public User() {
@@ -131,10 +139,10 @@ public class GraphOceanExample {
     @Data
     public static class Follow {
         @GraphProperty(value = "user_no1", required = true,
-                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_SRC_ID)
+                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_SRC_ID, dataType = GraphDataTypeEnum.STRING)
         private String userNo1;
         @GraphProperty(value = "user_no2", required = true,
-                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_DST_ID)
+                propertyTypeEnum = GraphPropertyTypeEnum.GRAPH_EDGE_DST_ID, dataType = GraphDataTypeEnum.STRING)
         private String userNo2;
         @GraphProperty(value = "follow_type", required = true, dataType = GraphDataTypeEnum.INT)
         private Integer followType;

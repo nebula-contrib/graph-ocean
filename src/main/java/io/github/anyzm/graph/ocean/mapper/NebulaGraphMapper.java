@@ -48,7 +48,7 @@ public class NebulaGraphMapper implements GraphMapper {
 
     private static final int BATCH_SIZE = 500;
 
-    private static final String SQL = "execute %s ; %s;";
+    private static final String SQL = "use %s ; %s;";
 
     @Setter
     @Getter
